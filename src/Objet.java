@@ -28,7 +28,9 @@ public class Objet{
 		masse = amasse;
 	}
 	
-	//test de l'intersection de 2 polygones
+	//test de l'intersection (ou toucher) entre 2 polygones 
+	//UNE AMELIORATION SANS DOUTE A FAIRE : trouver le point d intersection ! voir detail dans IntersectSegm
+	//leger default mais pas grave : si le polygone est a l interieur de l autre, il n y a pas intersection
 	public boolean Intersect(Objet poly2){
 		
 		for(int i= 0; i<= this.npoints -1; i++){
