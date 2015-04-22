@@ -34,7 +34,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		Liste = new LinkedList<Objet>();
 		
-		//Zone de test a vider
+		/*Création de polygone*/
 		Point A = new Point(100,100);
 		Point B = new Point(300,100);
 		Point C = new Point(600,600);
@@ -61,12 +61,12 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		Point[] tablo3 = {A3,E3,B3,C3,D3};
 		Obstacle Poly3 = new Obstacle(tablo3);
-		
+
+		//fin de creation
 		
 		Liste.add(Poly1);
 		Liste.add(Poly2);
 		Liste.add(Poly3);
-		//fin zone test
 		
 		addMouseListener(this);
 		addMouseMotionListener(this);

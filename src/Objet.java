@@ -14,8 +14,6 @@ public class Objet{
 	public int npoints; //nombre de points du polygone (souvent 4)
 	public Point[] points; //tableau contenant les points sommet du polygone
 	
-	public double masse;
-	
 	public Image pic;
 	
 	
