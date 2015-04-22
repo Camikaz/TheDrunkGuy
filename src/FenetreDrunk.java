@@ -22,9 +22,9 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	private int temps;
 	
 	public FenetreDrunk(){
-		setSize(1100,800);
+		setSize(1400,1000);
 		setResizable(false);
-		setLocation(400,100);
+		setLocation(400,000);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		setTitle("Drunk Guy");
@@ -42,7 +42,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Point E = new Point(250,500);
 		
 		Point[] tablo = {A,B,E,C,D};
-		Objet Poly1 = new Objet( tablo , 5);
+		Obstacle Poly1 = new Obstacle(tablo);
 		
 		Point A2 = new Point(900,400);
 		Point B2 = new Point(900,600);
@@ -50,16 +50,18 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Point D2 = new Point(1100,400);
 		
 		Point[] tablo2 = {A2,B2,C2,D2};
-		Objet Poly2 = new Objet( tablo2 , 5);
+		
+		Obstacle Poly2 = new Obstacle(tablo2);
 		
 		Point A3 = new Point(800,300);
 		Point B3 = new Point(800,700);
 		Point C3 = new Point(1200,700);
 		Point D3 = new Point(1200,300);
-		Point E3 = new Point(650,550);
+		Point E3 = new Point(650,500);
 		
 		Point[] tablo3 = {A3,E3,B3,C3,D3};
-		Objet Poly3 = new Objet( tablo3 , 5);
+		Obstacle Poly3 = new Obstacle(tablo3);
+		
 		
 		Liste.add(Poly1);
 		Liste.add(Poly2);
@@ -123,6 +125,9 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				Liste.get(i).points[j].dy = Liste.get(i).points[j].dy + Liste.get(i).points[j].ddy;
 			}
 		}
+
+
+		Liste.get(2).rotate(1, Liste.get(2).points[0]);
 		
 		repaint();
 		temps ++;

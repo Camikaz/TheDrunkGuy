@@ -21,27 +21,26 @@ public class Objet{
 	
 	
 	//Constructeur avec un tab de points et une masse
-	public Objet(Point[] apoints, double amasse){
+	public Objet(Point[] apoints){
 		points = apoints;
-		masse = amasse;
 		npoints = apoints.length;
 	}
 	
 	
 	//constructeur avec deux tableaux de double designant les positions X et Y de chaque points
-	public Objet(double[] tabX, double[] tabY, double amasse){ 
+	public Objet(double[] tabX, double[] tabY){ 
 		points = new Point[tabX.length];
 		npoints = tabX.length;
 		for(int i = 0; i<= points.length-1 ; i++){
 			points[i] = new Point( tabX[i], tabY[i]);
 		}
-		masse = amasse;
 	}
 	
 	
 	//public abstract void move();
 	
-	
+
+
 	public void translate (double DX, double DY){
 		for(int i = 0; i <= this.npoints - 1 ; i++ ){
 			this.points[i].x = this.points[i].x + DX;
@@ -50,7 +49,19 @@ public class Objet{
 	}
 	
 	/*Translation autoure d'un point O */
-	public void rotate(double angle, Point O){
+	public void rotate (double angle, Point O){
+		for(int i = 0; i <= this.npoints -1 ; i++){
+			if((this.points[i].x != O.x)||(this.points[i].y != O.y)){
+				
+				double r = Math.sqrt( Math.pow(this.points[i].x - O.x, 2) + Math.pow(this.points[i].y - O.y, 2) );
+				
+				double xb = O.x + r*( ((this.points[i].x - O.x)/r)*Math.cos(Math.toRadians(angle)) - ((this.points[i].y - O.y)/r)*Math.sin(Math.toRadians(angle)) );
+				double yb = O.y + r*( ((this.points[i].y - O.y)/r)*Math.cos(Math.toRadians(angle)) + ((this.points[i].x - O.x)/r)*Math.sin(Math.toRadians(angle)) );
+				
+				this.points[i].x = xb;
+				this.points[i].y = yb;
+			}
+		}
 		
 	}
 	
