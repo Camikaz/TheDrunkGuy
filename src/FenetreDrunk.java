@@ -16,7 +16,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		MouseMotionListener, ActionListener {
 	
 	private Timer timer;
-	private LinkedList<Objet> Liste; //La Liste de tout les objets à afficher
+	private LinkedList<Objet> Liste; //La Liste de tout les objets a afficher
 	private Graphics buffer;
 	private BufferedImage ArrierePlan;
 	private int temps;
@@ -34,7 +34,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		Liste = new LinkedList<Objet>();
 		
-		/*Création de polygone*/
+		/*Creation de polygone*/
 		Point A = new Point(100,100);
 		Point B = new Point(300,100);
 		Point C = new Point(600,600);
