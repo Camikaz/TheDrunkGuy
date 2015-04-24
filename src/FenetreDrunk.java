@@ -20,6 +20,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	private Graphics buffer;
 	private BufferedImage ArrierePlan;
 	private int temps;
+	private double sourx;
+	private double soury;
 	
 	public FenetreDrunk(){
 		setSize(1400,1000);
@@ -126,8 +128,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			}
 		}
 
-
-		Liste.get(2).rotate(1, Liste.get(2).points[0]);
 		
 		repaint();
 		temps ++;
@@ -143,7 +143,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		sourx = arg0.getX();
+		soury = arg0.getY();
 
 	}
 
