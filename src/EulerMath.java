@@ -32,8 +32,8 @@ public abstract class EulerMath {
 	public void applyInstantTorque(Membre o, double torque) {
 		o.angularVelocity += dt*torque/o.inertia;
 		o.orientation += o.angularVelocity*dt;
-		o.rotate(o.angularVelocity*dt, o); // Cette ligne reste à voir selon comment Camille définis son angle de rotation pour la méthode rotation, si c'est une variation d'angle alors la ligne est bonne, mais si c'est une rotation par rapport à l'axe des x la ligne est à changer
-		//Reda, il faut mettre un point en 2eme entree, et non un objet
+		o.rotate(o.angularVelocity*dt, o.centerOfMass); // Cette ligne reste à voir selon comment Camille définis son angle de rotation pour la méthode rotation, si c'est une variation d'angle alors la ligne est bonne, mais si c'est une rotation par rapport à l'axe des x la ligne est à changer
+		//Reda, il faut mettre un point en 2eme entree, et non un objet : C'est r�gl�, Reda.
 	}
 	
 	
