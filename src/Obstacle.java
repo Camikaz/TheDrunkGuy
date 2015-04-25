@@ -39,7 +39,6 @@ public class Obstacle extends Objet {
 		}
 	}
 
-	@Override
 	public void move() {
 		for(int i = 0; i <= this.npoints-1 ; i++){
 			

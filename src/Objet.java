@@ -34,8 +34,10 @@ public abstract class Objet{
 		}
 	}
 	
+	// Pourquoi la méthode est abstraite si la classe l'est déjà? Je la mets en commentaire en attendant - Reda
+	/**public abstract void move();
+	 */
 	
-	public abstract void move();
 	
 
 
@@ -195,7 +197,6 @@ public abstract class Objet{
 	 * Le mieux est qu il n y ait qu une seule intersection (la plupart des cas) car cette methode n en recherche que un
 	 * Si le polygone est a l interieur de l autre, il n y a pas intersection*/
 		public Point IntersectP(Objet poly2){
-			Point A;
 			for(int i= 0; i<= this.npoints -1; i++){
 				for(int j = 0; j<= poly2.npoints -1 ; j++){
 					if(i!=this.npoints-1){
