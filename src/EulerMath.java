@@ -13,12 +13,6 @@ public abstract class EulerMath {
 	public Math() {
 	}
 	
-	public void applyInstantForceToPoint(double pointMass, Vector force, point p) {
-		p.dx += dt*force.x/pointMass;
-		p.dy += dt*force.y/pointMass;
-		
-	}
-	
 	
 	public void applyInstantForceToObjet(Objet o, Vector force) {
 		for(int i=0;i<o.npoints;i++){
@@ -36,7 +30,7 @@ public abstract class EulerMath {
 	public void applyInstantTorque(Objet o, double torque) {
 		o.angularVelocity += dt*torque/o.inertia;
 		o.orientation += o.angularVelocity*dt;
-		o.rotate(o.angularVelocity*dt, o); // Cette ligne reste à voir selon comment Camille définis son angle de rotation pour la méthode rotation, si c'est une variation d'angle alors la ligne est bonne, mais si c'est une rotation par rapport à l'axe des x la ligne est à changer
+		o.rotate(o.angularVelocity*dt, o); // Cette ligne reste Ã  voir selon comment Camille dÃ©finis son angle de rotation pour la mÃ©thode rotation, si c'est une variation d'angle alors la ligne est bonne, mais si c'est une rotation par rapport Ã  l'axe des x la ligne est Ã  changer
 	}
 	
 	
