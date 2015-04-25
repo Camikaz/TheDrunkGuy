@@ -4,24 +4,17 @@ import java.awt.Image;
  *  et peut etre aussi les obstacles quand ils seront au premier plan.
  *  Je n'ai pas utilise la classe Polygon existante car je veux utiliser mes propres points avec une vitesse et une acceleration
  *  
- *  Cette classe devra atre transformee en abstract !
+ *  Cette classe est abstraite et ses filles sont Membre et Obstacle
  */
  
 
 
-public class Objet{
+public abstract class Objet{
 	
 	public int npoints; //nombre de points du polygone (souvent 4)
 	public Point[] points; //tableau contenant les points sommet du polygone
 	
 	public Image pic;
-	public point centerOfMass;
-	public double massDensity; // With this we get the mass + the inertia, for polygones made of the same material the density should remain the same.
-	public double inertia;
-	public double mass;
-	public double angularVelocity;
-	public double orientation;
-	public double velocity;// The velocity, orientation & angular velocity have to be initialised to 0 and the velocity is the dx for the center of mass.
 	
 	
 	
@@ -42,7 +35,7 @@ public class Objet{
 	}
 	
 	
-	//public abstract void move();
+	public abstract void move();
 	
 
 
@@ -53,7 +46,7 @@ public class Objet{
 		}
 	}
 	
-	/*Translation autoure d'un point O */
+	/*Rotation d'une variation d angle (en degres) autour d'un point O */
 	public void rotate (double angle, Point O){
 		for(int i = 0; i <= this.npoints -1 ; i++){
 			if((this.points[i].x != O.x)||(this.points[i].y != O.y)){
@@ -316,67 +309,6 @@ public class Objet{
 		
 		return (new Point(-1,-1));
 	}
-	
-	public void setCenterOfMass() {
-		double A, Cx, Cy;
-		A=0;
-		Cx=0;
-		Cy=0;
-		for(int i=0;i<npoints;i++){
-			A+=(points[i].x*points[i+1].y-points[i+1].x*points[i].y)/2
-		}
-		
-		for(int j=0;j<npoints;j++) {
-			Cx+=(points[i].x + points[i+1].x)*(points[i].x*points[i+1].y-points[i+1].x*points[i].y)/(6*A);
-			Cy+=(points[i].y + points[i+1].y)*(points[i].x*points[i+1].y-points[i+1].x*points[i].y)/(6*A);
-		}
-		
-		this.centerOfMass = new Point(Cx, Cy);
-	}
-	
-	public Point getCenterOfMass() {
-		if(centerOfMass==null){
-			getCenterOfMass();
-			return centerOfMass;
-		} else {
-			return centerOfMass;
-		}
-	}
-	
-	public double getMass() {
-		double A = 0;
-		for(int i=0;i<npoints;i++){
-			A+=(points[i].x*points[i+1].y-points[i+1].x*points[i].y)/2
-		}
-		return A*massDensity;
-	}
-	
-	//Les méthodes avec les triangles sont utilisées pour avoir le moment d'inertie du polygone en le décomposant en autant de triangles que le polygone n'a de sommets, on applique huygens pour obtenir le moment d'inertie total
-	
-	public double triangleInertia(Point A, Point B, Point C) {
-		Vector ba = new Vector(B,A);
-		Vector bc = new Vector(B,C);
-		Vector ca = new Vector(C,A);
-		double b = bc.norm();
-		double a = Math.abs(ba.dot(bc)/bc.norm);
-		double h = Math.abs(bc.cross2D(ba)/bc.norm);
-		double i = (h*b*b*b + h*a*b*b + h*a*a*b + b*h*h*h)/12;
-		return i;
-	}
-	
-	public Point triangleCenterOfMass(Point A, Point B, Point C) {
-		Objet triangle = new Objet({A,B,C});
-		triangle.setCenterOfMass();
-		return triangle.centerOfMass;
-	}
-	
-	
-	public void setMomentOfInertia() {
-		inertia = 0;
-		for(int i=0;i<npoints-1;i){
-			inertia += triangleInertia(centerOfMass, points[i+1], points[i]) + mass*Math.pow(centerOfMass.distance(triangleCenterOfMass(centerOfMass, points[i+1], points[i])),2);
-		}
-		inertia += triangleInertia(centerOfMass, points[0], points[npoints-1]) + mass*Math.pow(centerOfMass.distance(triangleCenterOfMass(centerOfMass, points[0], points[npoints-1])),2);
-	}
+
 	
 }

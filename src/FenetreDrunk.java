@@ -127,6 +127,10 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				Liste.get(i).points[j].dy = Liste.get(i).points[j].dy + Liste.get(i).points[j].ddy;
 			}
 		}
+		
+		// juste pour test
+		Liste.get(0).translate(5, 0);
+		Liste.get(0).rotate(3, Liste.get(0).points[2]);
 
 		
 		repaint();
