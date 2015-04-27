@@ -1,3 +1,4 @@
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 
@@ -13,6 +14,7 @@ public class Membre extends Objet {
 	public double angularVelocity;
 	public double orientation;
 	public Vector velocity;// The velocity, orientation & angular velocity have to be initialised to 0 and the velocity is the dx for the center of mass.
+	//Why is the velocity only the dx ?
 	public ArrayList<Vector> forces;
 		
 
@@ -54,7 +56,7 @@ public class Membre extends Objet {
 	
 	public Point getCenterOfMass() {
 		if(centerOfMass==null){
-			getCenterOfMass();
+			getCenterOfMass(); //Here there is an infinite loop isn't it ? Cam
 			return centerOfMass;
 		} else {
 			return centerOfMass;
@@ -63,9 +65,10 @@ public class Membre extends Objet {
 	
 	public double getMass() {
 		double A = 0;
-		for(int i=0;i<npoints;i++){
+		for(int i=0;i<npoints-1;i++){
 			A+=(points[i].x*points[i+1].y-points[i+1].x*points[i].y)/2;
 		}
+		A+=(points[npoints-1].x*points[0].y-points[0].x*points[npoints-1].y)/2;
 		return A*massDensity;
 	}
 	
@@ -97,17 +100,26 @@ public class Membre extends Objet {
 		inertia += triangleInertia(centerOfMass, points[0], points[npoints-1]) + mass*Math.pow(centerOfMass.distance(triangleCenterOfMass(centerOfMass, points[0], points[npoints-1])),2);
 	}
 
-	public void move(EulerMath calcul) {
-		//Mettre des calculs de nouvelles acceleration, rotation, translation et compagnie
+	public void move() {
+		//Mettre des calculs de nouvelles acceleration, rotation, translation et compagnie. J'ai change un peu la methode
 		double torque = 0;
 		Vector sum = new Vector(0,0);
 		for(int i=0;i<forces.size();i++) {
 			sum = sum.add(forces.get(i));
-			torque += calcul.getTorque(this ,forces.get(i));
+			torque += EulerMath.getTorque(this ,forces.get(i));
 		}
-		calcul.applyInstantForce(this, sum);
-		calcul.applyInstantTorque(this, torque);
+		EulerMath.applyInstantForce(this, sum);
+		EulerMath.applyInstantTorque(this, torque);
 		
+	}
+
+	@Override
+	public void draw(Graphics buffer) {
+		for(int j = 0; j <= this.npoints -2 ; j++){ //On parcourt les points du polygones pour tracer ses arretes
+			buffer.drawLine((int) this.points[j].x, (int) this.points[j].y, (int) this.points[j+1].x, (int) this.points[j+1].y);
+		}
+		buffer.drawLine((int) this.points[this.npoints-1].x, (int) this.points[this.npoints-1].y, (int) this.points[0].x, (int) this.points[0].y);
+	
 	}
 
 }

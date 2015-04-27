@@ -23,10 +23,12 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	private double sourx;
 	private double soury;
 	
+	public static final double LARGEUR = 1000;
+	public static final double HAUTEUR = 900;
+	
 	public FenetreDrunk(){
-		setSize(1400,1000);
+		setSize((int)LARGEUR,(int)HAUTEUR);
 		setResizable(false);
-		setLocation(400,000);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		setTitle("Drunk Guy");
@@ -37,15 +39,14 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste = new LinkedList<Objet>();
 		
 		/*Creation de polygone*/
-		Point A = new Point(100,100);
-		Point B = new Point(300,100);
+		Point A = new Point(50,000);
+		Point B = new Point(300,000);
 		Point C = new Point(500,600);
 		Point D = new Point(100,600);
 		Point E = new Point(300,500);
 		
 		Point[] tablo = {A,B,E,C,D};
-		Obstacle Poly1 = new Obstacle(tablo);
-		Poly1.translate(200, 0);
+		Obstacle Poly1 = new Obstacle(tablo,0.5,0);
 		
 		Point A2 = new Point(900,400);
 		Point B2 = new Point(900,600);
@@ -54,7 +55,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		Point[] tablo2 = {A2,B2,C2,D2};
 		
-		Obstacle Poly2 = new Obstacle(tablo2);
+		Obstacle Poly2 = new Obstacle(tablo2,0,0.01);
 		
 		Point A3 = new Point(800,300);
 		Point B3 = new Point(800,700);
@@ -63,7 +64,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Point E3 = new Point(650,500);
 		
 		Point[] tablo3 = {A3,E3,B3,C3,D3};
-		Obstacle Poly3 = new Obstacle(tablo3);
+		Obstacle Poly3 = new Obstacle(tablo3,5,0);
 
 		//fin de creation
 		
@@ -84,7 +85,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		/*buffer.setColor(Color.PINK);
 		buffer.fillRect(0,0,this.getWidth(),this.getHeight());*/
 		// la merde d'Alestair pour faire des jolis petits traits
-		buffer.fillRect(0,0,this.getWidth(),this.getHeight());
 		buffer.setColor(Color.GRAY);
 		buffer.fillRect(0, 0, this.getWidth(), this.getHeight());
 				
@@ -96,11 +96,9 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//Dessin des polygones
 		buffer.setColor(Color.BLACK);
-		for(int i = 0; i<= Liste.size() -1 ; i++){ //On parcourt la liste de polygones
-			for(int j = 0; j <= Liste.get(i).npoints -2 ; j++){ //On parcourt les points du polygones pour tracer ses arretes
-				buffer.drawLine((int) Liste.get(i).points[j].x, (int) Liste.get(i).points[j].y, (int) Liste.get(i).points[j+1].x, (int) Liste.get(i).points[j+1].y);
-			}
-			buffer.drawLine((int) Liste.get(i).points[Liste.get(i).npoints-1].x, (int) Liste.get(i).points[Liste.get(i).npoints-1].y, (int) Liste.get(i).points[0].x, (int) Liste.get(i).points[0].y);
+		
+		for(int i = 0; i<= Liste.size() -1 ; i++){ //On parcourt la liste de polygones et les dessine
+			Liste.get(i).draw(buffer);
 		}
 		
 		//Petit test d'intersection
@@ -130,16 +128,17 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		//Evolution de chaque objet a remplacer par la methode move de chaque objet
 		for(int i = 0; i<= Liste.size() -1 ; i++){
 			for(int j = 0; j <= Liste.get(i).npoints -1 ; j++){
-				Liste.get(i).points[j].x = Liste.get(i).points[j].x + Liste.get(i).points[j].dx;
+				Liste.get(i).move();
+				/*Liste.get(i).points[j].x = Liste.get(i).points[j].x + Liste.get(i).points[j].dx;
 				Liste.get(i).points[j].y = Liste.get(i).points[j].y + Liste.get(i).points[j].dy;
 				Liste.get(i).points[j].dx = Liste.get(i).points[j].dx + Liste.get(i).points[j].ddx;
-				Liste.get(i).points[j].dy = Liste.get(i).points[j].dy + Liste.get(i).points[j].ddy;
+				Liste.get(i).points[j].dy = Liste.get(i).points[j].dy + Liste.get(i).points[j].ddy;*/
 			}
 		}
 		
 		// juste pour test
-		Liste.get(0).translate(5*Math.cos(temps*0.01), 0);
-		Liste.get(0).rotate(Math.cos(temps*0.01), Liste.get(0).points[2]);
+		//Liste.get(0).translate(5*Math.cos(temps*0.01), 0);
+		//Liste.get(0).rotate(Math.cos(temps*0.01), Liste.get(0).points[2]);
 
 		
 		repaint();

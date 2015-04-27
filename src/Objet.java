@@ -1,3 +1,4 @@
+import java.awt.Graphics;
 import java.awt.Image;
 import java.util.LinkedList;
 
@@ -35,8 +36,9 @@ public abstract class Objet{
 	}
 	
 	// Pourquoi la méthode est abstraite si la classe l'est déjà? Je la mets en commentaire en attendant - Reda
-	/*public abstract void move();
-	 */
+	public abstract void move();
+	public abstract void draw(Graphics g);
+	
 	//la methode est abstraite, cela signifie que chaque classes filles devra avoir sa classe move, et donc son propre deplacement
 	//Si tu veux, on peut faire un mouvement standard avec une classe non abstraite et completer ce mouvement dans chaque fille mais c'est pas tres interessant
 
