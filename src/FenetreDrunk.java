@@ -99,7 +99,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			for(int j = i ; j <= Liste.size()-1 ; j++){
 				if((Liste.get(i).Intersect(Liste.get(j))&&(i!=j))){
 					k++;
-					PtInter.add(Liste.get(i).IntersectP(Liste.get(j)));
+					PtInter.addAll(Liste.get(i).IntersectTab(Liste.get(j)));
 				}
 			}
 		}

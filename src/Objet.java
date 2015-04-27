@@ -1,4 +1,5 @@
 import java.awt.Image;
+import java.util.LinkedList;
 
 /*Classe cree par Camille le 21/04. Elle va servir a designer les polygones dont le bonhomme est constitue
  *  et peut etre aussi les obstacles quand ils seront au premier plan.
@@ -231,6 +232,126 @@ public abstract class Objet{
 		
 	/*Test intersection entre segment [AB] et [CD], retourne le point d'intersection*/
 	static Point IntersectSegmP(Point A, Point B, Point C, Point D){
+		
+		//Traitement des cas de verticalite
+		if((B.x == A.x)&&(C.x!=D.x)){ //AB vertical, pas CD
+			if((D.y + (A.x - D.x) * ((D.y - C.y)/(D.x - C.x)) <= Math.max(A.y, B.y)) && (D.y + (A.x - D.x) * ((D.y - C.y)/(D.x - C.x)) >= Math.min(A.y, B.y))){
+				return (new Point(A.x, D.y + (A.x - D.x) * ((D.y - C.y)/(D.x - C.x)) ));
+			}
+			else{return (new Point(-1,-1));}
+		}
+		
+		if((C.x == D.x)&&(A.x!=B.x)){ //CD vertical, pas AB
+			if( (B.y + (C.x - B.x) * ((B.y - A.y)/(B.x - A.x)) <= Math.max(C.y, D.y)) && (B.y + (C.x - B.x) * ((B.y - A.y)/(B.x - A.x)) >= Math.min(C.y, D.y)) ) {
+				return (new Point(C.x,B.y + (C.x - B.x) * ((B.y - A.y)/(B.x - A.x)) ));
+			}
+			else{ return (new Point(-1,-1));}
+		}
+		
+		if((B.x == A.x)&&(C.x == D.x)){ //AB et CD verticaux
+			if(B.x == C.x){
+				return A;
+			}
+			else{ return (new Point(-1,-1));}
+		}
+		
+		
+		Point bout1G = new Point(0,0); //extremite gauche du premier segment
+		Point bout1D = new Point(0,0); //extremite droite du premier segment
+		if(A.x < B.x){
+			bout1G = A;
+			bout1D = B;
+		}
+		else{
+			bout1G = B;
+			bout1D = A;
+		}
+		
+		Point bout2G = new Point(0,0); //extremite gauche du deuxieme segment
+		Point bout2D = new Point(0,0); //extremite droite du deuxieme segment
+		if(C.x < D.x){
+			bout2G = C;
+			bout2D = D;
+		}
+		else{
+			bout2G = D;
+			bout2D = C;
+		}
+		
+		if((bout1D.x < bout2G.x)||(bout1G.x > bout2D.x)){ //test si les bouts sont eloignes horizontalement
+			return (new Point(-1,-1));
+		}
+		
+		
+		double xG = Math.max(bout1G.x, bout2G.x);
+		double xD = Math.min(bout1D.x, bout2D.x);
+		
+		double yG1 = B.y + (xG - B.x) * ((B.y - A.y)/(B.x - A.x));
+		double yG2 = D.y + (xG - D.x) * ((D.y - C.y)/(D.x - C.x));
+		
+		double Y1,Y2;
+		boolean var;
+		
+		if(yG1<yG2){var = true;}
+		else{var =false;}
+		
+		for(double X = xG; X <= xD ; X = X + 0.1){ //On parcourt sur la zone susceptible de croisement
+			Y1 = B.y + (X - B.x) * ((B.y - A.y)/(B.x - A.x));
+			Y2 = D.y + (X - D.x) * ((D.y - C.y)/(D.x - C.x));
+			
+			if((Y1>=Y2)&&(var == true)){
+				return (new Point(X,((Y1+Y2)/2)));
+			}
+			
+			if((Y1<=Y2)&&(var == false)){
+				return (new Point(X,((Y1+Y2)/2)));
+			}
+			
+		}
+		
+		return (new Point(-1,-1));
+	}
+
+	/*test intersection retournant 1 point d intersection
+	 * Le mieux est qu il n y ait qu une seule intersection (la plupart des cas) car cette methode n en recherche que un
+	 * Si le polygone est a l interieur de l autre, il n y a pas intersection*/
+		public LinkedList<Point> IntersectTab(Objet poly2){
+			LinkedList<Point> ListeP = new LinkedList<Point>();
+			for(int i= 0; i<= this.npoints -1; i++){
+				for(int j = 0; j<= poly2.npoints -1 ; j++){
+					if(i!=this.npoints-1){
+						if(j!= poly2.npoints-1){
+							if(IntersectSegm( this.points[i], this.points[i+1], poly2.points[j], poly2.points[j+1])){
+								ListeP.add(IntersectSegmP( this.points[i], this.points[i+1], poly2.points[j], poly2.points[j+1]));
+							}
+						}
+						else{
+							if(IntersectSegm( this.points[i], this.points[i+1], poly2.points[j], poly2.points[0])){
+								ListeP.add(IntersectSegmP( this.points[i], this.points[i+1], poly2.points[j], poly2.points[0]));
+							}
+						}
+					}
+					else{
+						if(j!= poly2.npoints-1){
+							if(IntersectSegm( this.points[i], this.points[0], poly2.points[j], poly2.points[j+1])){
+								ListeP.add(IntersectSegmP( this.points[i], this.points[0], poly2.points[j], poly2.points[j+1]));
+							}
+						}
+						else{
+							if(IntersectSegm( this.points[i], this.points[0], poly2.points[j], poly2.points[0])){
+								ListeP.add(IntersectSegmP( this.points[i], this.points[0], poly2.points[j], poly2.points[0]));
+							}
+						}
+						
+					}
+				}//fin des j
+			}//fin des i
+			if(ListeP.size() == 0){return null;}
+			else{return ListeP;}
+		}
+		
+	/*Test intersection entre segment [AB] et [CD], retourne le point d'intersection*/
+	static Point IntersectSegmTab(Point A, Point B, Point C, Point D){
 		
 		//Traitement des cas de verticalite
 		if((B.x == A.x)&&(C.x!=D.x)){ //AB vertical, pas CD
