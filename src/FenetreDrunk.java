@@ -39,12 +39,13 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		/*Creation de polygone*/
 		Point A = new Point(100,100);
 		Point B = new Point(300,100);
-		Point C = new Point(600,600);
-		Point D = new Point(200,600);
-		Point E = new Point(250,500);
+		Point C = new Point(500,600);
+		Point D = new Point(100,600);
+		Point E = new Point(300,500);
 		
 		Point[] tablo = {A,B,E,C,D};
 		Obstacle Poly1 = new Obstacle(tablo);
+		Poly1.translate(200, 0);
 		
 		Point A2 = new Point(900,400);
 		Point B2 = new Point(900,600);
@@ -72,6 +73,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		
 		timer = new Timer(30,this);
 		timer.start();
 		
@@ -79,8 +81,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	
 	public void paint(Graphics g){
 		//Dessin du fond
-		buffer.setColor(Color.PINK);
-		buffer.fillRect(0,0,this.getWidth(),this.getHeight());
+		/*buffer.setColor(Color.PINK);
+		buffer.fillRect(0,0,this.getWidth(),this.getHeight());*/
 		// la merde d'Alestair pour faire des jolis petits traits
 		buffer.fillRect(0,0,this.getWidth(),this.getHeight());
 		buffer.setColor(Color.GRAY);
@@ -103,16 +105,14 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//Petit test d'intersection
 		LinkedList<Point> PtInter = new LinkedList<Point>();
-		int k = 0;
 		for(int i = 0; i<= Liste.size()-1; i++){
 			for(int j = i ; j <= Liste.size()-1 ; j++){
 				if((Liste.get(i).Intersect(Liste.get(j))&&(i!=j))){
-					k++;
-					PtInter.addAll(Liste.get(i).IntersectTab(Liste.get(j)));
+					PtInter.addAll(Liste.get(i).IntersectList(Liste.get(j)));
 				}
 			}
 		}
-		buffer.drawString("Ca touche "+ k +" fois !", 20, 50);
+		buffer.drawString("Ca touche "+ PtInter.size() +" fois !", 20, 50);
 		
 		for(int l = 0 ; l <= PtInter.size()-1 ; l++){
 			buffer.drawString("Ca touche ",(int) (PtInter.get(l).x), (int) (PtInter.get(l).y));
@@ -138,8 +138,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		}
 		
 		// juste pour test
-		Liste.get(0).translate(5, 0);
-		Liste.get(0).rotate(3, Liste.get(0).points[2]);
+		Liste.get(0).translate(5*Math.cos(temps*0.01), 0);
+		Liste.get(0).rotate(Math.cos(temps*0.01), Liste.get(0).points[2]);
 
 		
 		repaint();
