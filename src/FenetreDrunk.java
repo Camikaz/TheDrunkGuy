@@ -81,7 +81,16 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		//Dessin du fond
 		buffer.setColor(Color.PINK);
 		buffer.fillRect(0,0,this.getWidth(),this.getHeight());
-		
+		// la merde d'Alestair pour faire des jolis petits traits
+		buffer.fillRect(0,0,this.getWidth(),this.getHeight());
+		buffer.setColor(Color.GRAY);
+		buffer.fillRect(0, 0, this.getWidth(), this.getHeight());
+				
+		buffer.setColor(Color.white);
+		buffer.drawLine(0,((int)(this.getHeight()*0.5)),this.getWidth(), (int)(this.getHeight()*0.5));
+		for(int i = -10; i <= 20; i++){
+			buffer.drawLine(((int)(this.getWidth()*0.5)),((int)(this.getHeight()*0.5)),((int)(this.getWidth()*i*0.1)),this.getHeight());
+		}
 		
 		//Dessin des polygones
 		buffer.setColor(Color.BLACK);
