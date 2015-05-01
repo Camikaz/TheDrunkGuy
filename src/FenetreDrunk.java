@@ -192,10 +192,10 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		// juste pour test
 		//Liste.get(0).translate(5*Math.cos(temps*0.01), 0);
 		//Liste.get(0).rotate(Math.cos(temps*0.01), Liste.get(0).points[2]);
-		/*
+		
 		Obstacle.Obj.x = -LARGEUR*0.5 + sourx;
 		Obstacle.Obj.y = HAUTEUR*0.5 - soury;
-		*/
+		
 		
 		repaint();
 		temps ++;
