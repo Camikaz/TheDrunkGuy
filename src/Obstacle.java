@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.LinkedList;
 
@@ -8,6 +9,8 @@ public class Obstacle extends Objet {
 	protected double dz;
 	
 	public static Point Obj = new Point(0, 100); //Objectif pour filmer l image
+	public static double zP = -20; //la profondeur du plan ecran de la camera
+	public static double zOb = -10; //profondeur de l'objectif
 	
 	protected boolean actif; //actif si l'objet est dans la zone de contact
 	
@@ -43,7 +46,7 @@ public class Obstacle extends Objet {
 			actif = false;
 		}
 		this.z = az;
-		if((az<-9)||(az>5)){
+		if((az<-9)||(az>100)){
 			this.setDz(-this.getDz());
 		}
 	}	
@@ -87,8 +90,8 @@ public class Obstacle extends Objet {
 		Point[] tab = new Point[this.npoints];
 		double xp, yp;
 		for(int i =0 ; i < this.npoints ; i++){
-			xp = Obj.x + (-20+10)*(this.points[i].x-Obj.x)/(this.z + 10); //(-20+10) est la difference de z entre le plan et l objectif
-			yp = Obj.y + (-20+10)*(this.points[i].y-Obj.y)/(this.z + 10);
+			xp = Obj.x + (zP - zOb)*(this.points[i].x-Obj.x)/(this.z - zOb); //(zP - zOb) est la difference de z entre le plan et l objectif
+			yp = Obj.y + (zP - zOb)*(this.points[i].y-Obj.y)/(this.z - zOb);
 			
 			xp = FenetreDrunk.LARGEUR*0.5 - xp;
 			yp = FenetreDrunk.HAUTEUR*0.5 + yp;
