@@ -24,10 +24,10 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	private double soury;
 	
 	public static final double LARGEUR = 1000;
-	public static final double HAUTEUR = 900;
+	public static final double HAUTEUR = 1000;
 	
 	public FenetreDrunk(){
-		setSize((int)LARGEUR,(int)HAUTEUR);
+		setSize((int)LARGEUR+this.getInsets().left + this.getInsets().right,(int)HAUTEUR+this.getInsets().top + this.getInsets().bottom);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
@@ -39,14 +39,22 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste = new LinkedList<Objet>();
 		
 		/*Creation de polygone*/
-		Point A = new Point(50,000);
+		Point A = new Point(200,00);
 		Point B = new Point(300,000);
-		Point C = new Point(500,600);
-		Point D = new Point(100,600);
-		Point E = new Point(300,500);
+		Point C = new Point(400,600);
+		Point D = new Point(300,600);
+		Point E = new Point(000,300);
 		
-		Point[] tablo = {A,B,E,C,D};
-		Obstacle Poly1 = new Obstacle(tablo,0.5,0);
+		Point[] tablo = {A,B,C,D,E};
+		Obstacle Poly1 = new Obstacle(tablo,10,0);
+		
+		Point AA = new Point(-100,00);
+		Point BB = new Point(100,00);
+		Point CC = new Point(100,100);
+		Point DD = new Point(-100,100);
+		
+		Point[] tabloo = {AA,BB,CC,DD};
+		Obstacle Poly11 = new Obstacle(tabloo,5,0.01);
 		
 		Point A2 = new Point(900,400);
 		Point B2 = new Point(900,600);
@@ -65,10 +73,13 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		Point[] tablo3 = {A3,E3,B3,C3,D3};
 		Obstacle Poly3 = new Obstacle(tablo3,5,0);
+		
+		
 
 		//fin de creation
 		
 		Liste.add(Poly1);
+		Liste.add(Poly11);
 		Liste.add(Poly2);
 		Liste.add(Poly3);
 		
@@ -78,20 +89,45 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		timer = new Timer(30,this);
 		timer.start();
 		
+		System.out.println(Poly1.getClass());
+		
 	}
 	
 	public void paint(Graphics g){
-		//Dessin du fond
-		/*buffer.setColor(Color.PINK);
-		buffer.fillRect(0,0,this.getWidth(),this.getHeight());*/
+		
 		// la merde d'Alestair pour faire des jolis petits traits
 		buffer.setColor(Color.GRAY);
 		buffer.fillRect(0, 0, this.getWidth(), this.getHeight());
 				
 		buffer.setColor(Color.white);
-		buffer.drawLine(0,((int)(this.getHeight()*0.5)),this.getWidth(), (int)(this.getHeight()*0.5));
-		for(int i = -10; i <= 20; i++){
-			buffer.drawLine(((int)(this.getWidth()*0.5)),((int)(this.getHeight()*0.5)),((int)(this.getWidth()*i*0.1)),this.getHeight());
+		double xO = FenetreDrunk.LARGEUR*0.5 - Obstacle.Obj.x;
+		double yO = FenetreDrunk.HAUTEUR*0.5 + Obstacle.Obj.y;
+		buffer.drawLine(0,((int)(yO)),this.getWidth(), (int)(yO));
+		double x1;
+		double y1;
+		
+		for(int i = -10; i <= 10; i++){
+			x1 = Obstacle.Obj.x + (-20+10)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(-9 + 10); //-9 est la profondeur des lignes
+			y1 = Obstacle.Obj.y + (-20+10)*(0-Obstacle.Obj.y)/(-9 + 10);
+			x1 = LARGEUR*0.5 - x1;
+			y1 = HAUTEUR*0.5 + y1;
+			buffer.setColor(Color.getHSBColor((float) (i*0.1), 1, 1));
+			buffer.drawLine(((int)(xO)),(int)(yO),(int)(x1),(int) y1);
+		}
+		for(int i = 0; i <= 500; i++){
+			xO = Obstacle.Obj.x + (-20+10)*(-LARGEUR*0.5 -Obstacle.Obj.x)/(-9+i + 10); //-9+i est la profondeur des lignes
+			
+			yO = Obstacle.Obj.y + (-20+10)*(0-Obstacle.Obj.y)/(-9+i + 10);
+			xO = LARGEUR*0.5 - xO;
+			
+			yO = HAUTEUR*0.5 + yO;
+			
+			x1 = Obstacle.Obj.x + (-20+10)*(LARGEUR*0.5 -Obstacle.Obj.x)/(-9+i + 10);
+			y1 = Obstacle.Obj.y + (-20+10)*(0-Obstacle.Obj.y)/(-9+i + 10);
+			x1 = LARGEUR*0.5 - x1;
+			y1 = HAUTEUR*0.5 + y1;
+			buffer.setColor(Color.getHSBColor((float) (i*0.01), 1,1));
+			buffer.drawLine(((int)(xO)),(int)(yO),(int)(x1),(int) y1);
 		}
 		
 		//Dessin des polygones
@@ -102,11 +138,15 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		}
 		
 		//Petit test d'intersection
+		
 		LinkedList<Point> PtInter = new LinkedList<Point>();
 		for(int i = 0; i<= Liste.size()-1; i++){
 			for(int j = i ; j <= Liste.size()-1 ; j++){
-				if((Liste.get(i).Intersect(Liste.get(j))&&(i!=j))){
-					PtInter.addAll(Liste.get(i).IntersectList(Liste.get(j)));
+				if(i!=j){
+					if(Liste.get(i).getClass().toString().equals("class Membre")){
+						try{PtInter.addAll(Liste.get(i).IntersectList(Liste.get(j)));}
+						catch(NullPointerException npe){}
+					}
 				}
 			}
 		}
@@ -139,7 +179,10 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		// juste pour test
 		//Liste.get(0).translate(5*Math.cos(temps*0.01), 0);
 		//Liste.get(0).rotate(Math.cos(temps*0.01), Liste.get(0).points[2]);
-
+		
+		Obstacle.Obj.x = -LARGEUR*0.5 + sourx;
+		Obstacle.Obj.y = HAUTEUR*0.5 - soury;
+		
 		
 		repaint();
 		temps ++;

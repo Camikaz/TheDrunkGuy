@@ -1,10 +1,13 @@
 import java.awt.Graphics;
+import java.util.LinkedList;
 
 
 public class Obstacle extends Objet {
 	
-	protected double z;
+	protected double z; //profondeur : z positif: devant, z negatif : derriere
 	protected double dz;
+	
+	public static Point Obj = new Point(0, 100); //Objectif pour filmer l image
 	
 	protected boolean actif; //actif si l'objet est dans la zone de contact
 	
@@ -12,7 +15,7 @@ public class Obstacle extends Objet {
 	public Obstacle(Point[] apoints) {
 		super(apoints);
 		setZ(100);
-		dz = -0.0001;
+		dz = -0.01;
 		actif = false;
 	}
 	
@@ -40,8 +43,8 @@ public class Obstacle extends Objet {
 			actif = false;
 		}
 		this.z = az;
-		if(az<0){
-			this.setZ(20);
+		if((az<-9)||(az>5)){
+			this.setDz(-this.getDz());
 		}
 	}	
 	public void setDz (double adz){
@@ -81,18 +84,15 @@ public class Obstacle extends Objet {
 	/* Cette méthode doit renvoyer un tableau de point selon la position (surtout la distance) de l'obstacle 
 	 * Le tableau de point doit correspondre aux points sur l ecran*/
 	public Point[] perspective (){
-		Point P = new Point(0,0);
 		Point[] tab = new Point[this.npoints];
 		double xp, yp;
 		for(int i =0 ; i < this.npoints ; i++){
-			if(!P.equals(this.points[i])){
-				xp = P.x +  (this.points[i].x-P.x)/(1+this.getZ());
-				yp = P.y +  (this.points[i].y-P.y)/(1+this.getZ());
-				xp = FenetreDrunk.LARGEUR*0.5 + xp/(1+this.getZ());
-				yp = FenetreDrunk.HAUTEUR*0.5 - (yp-500)/(1+this.getZ());
-				tab[i] = (new Point(xp,yp) );
-			}
-			else{tab[i] = this.points[i];}
+			xp = Obj.x + (-20+10)*(this.points[i].x-Obj.x)/(this.z + 10); //(-20+10) est la difference de z entre le plan et l objectif
+			yp = Obj.y + (-20+10)*(this.points[i].y-Obj.y)/(this.z + 10);
+			
+			xp = FenetreDrunk.LARGEUR*0.5 - xp;
+			yp = FenetreDrunk.HAUTEUR*0.5 + yp;
+			tab[i] = new Point(xp,yp);
 		}
 		return tab;
 	}
@@ -104,9 +104,15 @@ public class Obstacle extends Objet {
 			buffer.drawLine((int) tab[j].x, (int) tab[j].y, (int) tab[j+1].x, (int) tab[j+1].y);
 		}
 		buffer.drawLine((int) tab[this.npoints-1].x, (int) tab[this.npoints-1].y, (int) tab[0].x, (int) tab[0].y);
+		
+	}
 	
-		
-		
+
+	public LinkedList<Point> IntersectListOb(Obstacle Ob){
+		if(Math.abs(this.z-Ob.z) <= 10){
+			return super.IntersectList(Ob);
+		}
+		return null;
 	}
 
 }
