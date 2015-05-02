@@ -68,6 +68,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		catch(IOException ioe) { ioe.printStackTrace();}
 		
 		//Place this wherever you want
+		//DESACTIVER CECI POUR ENLEVER LA MUSIQUE  (on mettre un bouton pour mettre en pause le son)
 		clip.start(); //or c lip.loop(0); clip.loop(LOOP_CONTINUOUSLY);
 		//Fin de la configuration du son
 		

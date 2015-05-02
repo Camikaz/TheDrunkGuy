@@ -281,6 +281,7 @@ public abstract class Objet{
 		return null;
 	}
 	
+	//Ceci renvoie le tableau des points correspondant a ce qu on affiche a l ecran (ces points dependents de la position de la camera)
 	public Point[] perspective (){
 		Point[] tab = new Point[this.npoints];
 		double xp, yp;
@@ -296,27 +297,30 @@ public abstract class Objet{
 		return tab;
 	}
 	
-
+	
+	//Pour dessiner n importe quel objet
 	public void draw(Graphics buffer) {
-		if(this.z > Obstacle.zOb){
-		buffer.setColor(Color.getHSBColor((float)( 0.5 + 0.5*Math.cos((this.z*0.01+((FenetreDrunk.temps*0.1)%100)))), (float) (0.7 + 0.2*Math.sin(FenetreDrunk.temps*0.001)), 1));
-		Point[] tab = this.perspective();
-		
-		int n = tab.length;
-		int[] tabY = new int[n];
-		int[] tabX = new int[n];
-		for(int i = 0 ; i<= tab.length-1 ; i++){
-			tabX[i] = (int) tab[i].x;
-			tabY[i] = (int) tab[i].y;
-		}
-		buffer.fillPolygon(tabX, tabY, n);
-		
-
-		buffer.setColor(Color.getHSBColor((float)( 0.5 + 0.5*Math.cos((this.z*0.01+((FenetreDrunk.temps*0.1)%100)))), (float) (0.7 + 0.2*Math.sin(FenetreDrunk.temps*0.001)), 0.5f));
-		for(int j = 0; j <= tab.length -2 ; j++){ //On parcourt les points du polygones pour tracer ses arretes
-			buffer.drawLine((int) tab[j].x, (int) tab[j].y, (int) tab[j+1].x, (int) tab[j+1].y);
-		}
-		buffer.drawLine((int) tab[this.npoints-1].x, (int) tab[this.npoints-1].y, (int) tab[0].x, (int) tab[0].y);
+		if(this.z > Obstacle.zOb){ // on dessine seulement si l'objet est devant la camera
+			//reglage de la couleur variante
+			buffer.setColor(Color.getHSBColor((float)( 0.5 + 0.5*Math.cos((this.z*0.01+((FenetreDrunk.temps*0.1)%100)))), (float) (0.7 + 0.2*Math.sin(FenetreDrunk.temps*0.001)), 1));
+			
+			Point[] tab = this.perspective();
+			
+			//La methode fillPolygon demande des tableau de x et de y :
+			int[] tabY = new int[tab.length];
+			int[] tabX = new int[tab.length];
+			for(int i = 0 ; i<= tab.length-1 ; i++){
+				tabX[i] = (int) tab[i].x;
+				tabY[i] = (int) tab[i].y;
+			}
+			buffer.fillPolygon(tabX, tabY, tab.length);
+			
+			//Une couleur un peu plus sombre pour les bords du polygone
+			buffer.setColor(Color.getHSBColor((float)( 0.5 + 0.5*Math.cos((this.z*0.01+((FenetreDrunk.temps*0.1)%100)))), (float) (0.7 + 0.2*Math.sin(FenetreDrunk.temps*0.001)), 0.5f));
+			for(int j = 0; j <= tab.length -2 ; j++){ //On parcourt les points du polygones pour tracer ses arretes
+				buffer.drawLine((int) tab[j].x, (int) tab[j].y, (int) tab[j+1].x, (int) tab[j+1].y);
+			}
+			buffer.drawLine((int) tab[this.npoints-1].x, (int) tab[this.npoints-1].y, (int) tab[0].x, (int) tab[0].y); //dessin de la ligne qui boucle le polygone
 		}
 		
 	}
@@ -325,7 +329,6 @@ public abstract class Objet{
 	//Renvoie un tableau dont l'index correspond au numero des Objet de liste, classe du plus proche au plus eloigne
 	public static int[] tri (LinkedList<Objet> liste){ 
 		int[] tab = new int[liste.size()];
-		
 		for(int i = 0 ; i< liste.size() ;i++){
 			tab[i] = i;
 		}
@@ -334,8 +337,9 @@ public abstract class Objet{
 		listCur.addAll(liste);
 		
 		Objet cur;
-		
 		int j;
+		
+		//Methode du tri par insertion, plutôt rapide pour des petits effectifs ou des effectifs presque triés
 		for(int i = 1; i < listCur.size() ;i++){
 			cur = listCur.get(i);
 			j = i;

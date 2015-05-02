@@ -6,7 +6,7 @@ import java.util.LinkedList;
 public class Obstacle extends Objet {
 	
 	
-	protected boolean actif; //actif si l'objet est dans la zone de contact
+	protected boolean actif; //actif si l'objet est dans la zone de contact, variable a remplacer par un boolean "decor" peut etre
 	
 	
 	public Obstacle(Point[] apoints) {
@@ -42,21 +42,6 @@ public class Obstacle extends Objet {
 		this.dz = adz;
 	}
 
-//Pour trouver le point de ref de l'objet (en bas a gauche). J'ai un peu modif la formule. Cam.
-	//Pourquoi ne pas retourner directement le point de reference ?
-	protected int refPosition() {
-		Point pRef = this.points[0];
-		int optimal = 0;
-		for(int s = 0; s < this.npoints; s++){
-			if(this.points[s].y < pRef.y){
-				if(this.points[s].x < pRef.x){
-					pRef = this.points[s];
-					optimal = s;
-				}
-			}
-		}
-		return optimal;
-	}
 
 	@Override
 	public void move() {
@@ -72,10 +57,4 @@ public class Obstacle extends Objet {
 		}
 	}
 	
-	/* Cette méthode doit renvoyer un tableau de point selon la position (surtout la distance) de l'obstacle 
-	 * Le tableau de point doit correspondre aux points sur l ecran*/
-	
-
-	
-
 }

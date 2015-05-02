@@ -105,7 +105,6 @@ public class Membre extends Objet {
 	}
 
 	public void move() {
-		//Mettre des calculs de nouvelles acceleration, rotation, translation et compagnie. J'ai change un peu la methode
 		double torque = 0;
 		Vector sum = new Vector(0,0);
 		for(int i=0;i<forces.size();i++) {
