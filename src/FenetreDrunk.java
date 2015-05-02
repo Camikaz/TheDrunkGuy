@@ -46,20 +46,20 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Point E = new Point(000,300);
 		
 		Point[] tablo = {A,B,C,D,E};
-		Obstacle Poly1 = new Obstacle(tablo,10,0);
+		Objet Poly1 = new Obstacle(tablo,10,-0.01);
 		
-		Point AA = new Point(2000,00);
-		Point BB = new Point(2100,00);
-		Point CC = new Point(2100,100);
-		Point DD = new Point(2000,100);
+		Point AA = new Point(00,00);
+		Point BB = new Point(100,00);
+		Point CC = new Point(100,100);
+		Point DD = new Point(0000,100);
 		
 		Point[] tabloo = {AA,BB,CC,DD};
 		Obstacle Poly11 = new Obstacle(tabloo,5,0.01);
 		
-		Point A2 = new Point(900,400);
-		Point B2 = new Point(900,600);
-		Point C2 = new Point(1100,600);
-		Point D2 = new Point(1100,400);
+		Point A2 = new Point(000,400);
+		Point B2 = new Point(000,600);
+		Point C2 = new Point(300,600);
+		Point D2 = new Point(300,400);
 		
 		Point[] tablo2 = {A2,B2,C2,D2};
 		
@@ -72,7 +72,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Point E3 = new Point(650,500);
 		
 		Point[] tablo3 = {A3,E3,B3,C3,D3};
-		Obstacle Poly3 = new Obstacle(tablo3,5,0);
+		Obstacle Poly3 = new Obstacle(tablo3,5,0.02);
 		
 		Point A4 = new Point(-300,300);
 		Point B4 = new Point(-300,-300);
@@ -80,7 +80,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Point D4 = new Point(-100,300);
 		
 		Point[] tablo4 = {A4,B4,C4,D4};
-		Obstacle Poly4 = new Obstacle(tablo4,5,0.2);
+		Obstacle Poly4 = new Obstacle(tablo4,5,0.01);
 		
 		
 
@@ -149,26 +149,30 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(i - Obstacle.zOb);
 			x1 = LARGEUR*0.5 - x1;
 			y1 = HAUTEUR*0.5 + y1;
-			buffer.setColor(Color.getHSBColor((float) (i*0.01), 0.5f,1));
+			buffer.setColor(Color.getHSBColor((float) (i*0.01), 1,(float) ((500-i)*0.002)));
 			buffer.drawLine(((int)(xO)),(int)(yO),(int)(x1),(int) y1);
 		}
 		
 		//Dessin des polygones
-		buffer.setColor(Color.BLACK);
 		
+		int[] ordre = new int[Liste.size()];
+		ordre = Objet.tri(Liste);
 		for(int i = 0; i<= Liste.size() -1 ; i++){ //On parcourt la liste de polygones et les dessine
-			Liste.get(i).draw(buffer);
+			Liste.get(ordre[i]).draw(buffer);
 		}
 		
 		//Petit test d'intersection
-		
+		buffer.setColor(Color.BLACK);
 		LinkedList<Point> PtInter = new LinkedList<Point>();
+		LinkedList<Objet> ZInter = new LinkedList<Objet>();
 		for(int i = 0; i<= Liste.size()-1; i++){
 			for(int j = i ; j <= Liste.size()-1 ; j++){
 				if(i!=j){
-					if(Liste.get(i).getClass().toString().equals("class Membre")){
-						try{PtInter.addAll(Liste.get(i).IntersectList(Liste.get(j)));}
-						catch(NullPointerException npe){}
+					if(Liste.get(i).Intersect(Liste.get(j)) ){
+						PtInter.addAll(Liste.get(i).IntersectList(Liste.get(j)));
+						for(int k = 0; k < Liste.get(i).IntersectList(Liste.get(j)).size() ; k++) {
+							ZInter.add(Liste.get(i));
+						}
 					}
 				}
 			}
@@ -176,7 +180,11 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		buffer.drawString("Ca touche "+ PtInter.size() +" fois !", 20, 50);
 		
 		for(int l = 0 ; l <= PtInter.size()-1 ; l++){
-			buffer.drawString("Ca touche ",(int) (PtInter.get(l).x), (int) (PtInter.get(l).y));
+			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(PtInter.get(l).x -Obstacle.Obj.x)/(ZInter.get(l).z - Obstacle.zOb);
+			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(PtInter.get(l).y-Obstacle.Obj.y)/(ZInter.get(l).z - Obstacle.zOb);
+			x1 = LARGEUR*0.5 - x1;
+			y1 = HAUTEUR*0.5 + y1;
+			buffer.drawString("Ca touche ",(int) (x1), (int) (y1));
 		}
 		
 		
@@ -192,16 +200,14 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		for(int i = 0; i<= Liste.size() -1 ; i++){
 			for(int j = 0; j <= Liste.get(i).npoints -1 ; j++){
 				Liste.get(i).move();
-				/*Liste.get(i).points[j].x = Liste.get(i).points[j].x + Liste.get(i).points[j].dx;
-				Liste.get(i).points[j].y = Liste.get(i).points[j].y + Liste.get(i).points[j].dy;
-				Liste.get(i).points[j].dx = Liste.get(i).points[j].dx + Liste.get(i).points[j].ddx;
-				Liste.get(i).points[j].dy = Liste.get(i).points[j].dy + Liste.get(i).points[j].ddy;*/
 			}
 		}
 		
 		// juste pour test
-		//Liste.get(0).translate(5*Math.cos(temps*0.01), 0);
-		//Liste.get(0).rotate(Math.cos(temps*0.01), Liste.get(0).points[2]);
+		Liste.get(0).translate(5*Math.cos(temps*0.01), 0);
+		Liste.get(0).rotate(Math.cos(temps*0.01), Liste.get(0).points[2]);
+		
+		Liste.get(1).rotate(temps*0.01, Liste.get(1).points[2]);
 		
 		Obstacle.Obj.x = -LARGEUR*0.5 + sourx;
 		Obstacle.Obj.y = HAUTEUR*0.5 - soury;

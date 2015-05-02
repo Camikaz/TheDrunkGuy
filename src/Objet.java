@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.LinkedList;
@@ -16,6 +17,15 @@ public abstract class Objet{
 	public Point[] points; //tableau contenant les points sommet du polygone
 	
 	public Image pic;
+	
+	protected double z; //profondeur : z positif: devant, z negatif : derriere
+	protected double dz;
+	
+
+	
+	public static Point Obj = new Point(0, 100); //Objectif pour filmer l image
+	public static double zP = -20; //la profondeur du plan ecran de la camera
+	public static double zOb = -10; //profondeur de l'objectif
 	
 	
 	
@@ -37,7 +47,6 @@ public abstract class Objet{
 	
 	// Pourquoi la méthode est abstraite si la classe l'est déjà? Je la mets en commentaire en attendant - Reda
 	public abstract void move();
-	public abstract void draw(Graphics g);
 	
 	//la methode est abstraite, cela signifie que chaque classes filles devra avoir sa classe move, et donc son propre deplacement
 	//Si tu veux, on peut faire un mouvement standard avec une classe non abstraite et completer ce mouvement dans chaque fille mais c'est pas tres interessant
@@ -68,7 +77,7 @@ public abstract class Objet{
 	
 	/*test intersection retournant vrai ou faux. Si le polygone est a l interieur de l autre, il n y a pas intersection*/
 	public boolean Intersect(Objet poly2){
-		
+		if(Math.abs(this.z - poly2.z)>=2){return false;}
 		for(int i= 0; i<= this.npoints -1; i++){
 			for(int j = 0; j<= poly2.npoints -1 ; j++){
 				if(i!=this.npoints-1){
@@ -102,6 +111,8 @@ public abstract class Objet{
 	
 	/*test intersection retournant une liste des points d intersections. Si le polygone est a l interieur de l autre, il n y a pas intersection*/
 	public LinkedList<Point> IntersectList(Objet poly2){
+		if(Math.abs(this.z - poly2.z) >= 2){
+			return null;}
 		LinkedList<Point> ListeP = new LinkedList<Point>();
 		Point A;
 		for(int i= 0; i<= this.npoints -1; i++){
@@ -269,7 +280,67 @@ public abstract class Objet{
 		}
 		return null;
 	}
+	
+	public Point[] perspective (){
+		Point[] tab = new Point[this.npoints];
+		double xp, yp;
+		for(int i =0 ; i < this.npoints ; i++){
+			xp = Obj.x + (zP - zOb)*(this.points[i].x-Obj.x)/(this.z - zOb); //(zP - zOb) est la difference de z entre le plan et l objectif
+			yp = Obj.y + (zP - zOb)*(this.points[i].y-Obj.y)/(this.z - zOb);
+			
+			xp = FenetreDrunk.LARGEUR*0.5 - xp;
+			yp = FenetreDrunk.HAUTEUR*0.5 + yp;
+			tab[i] = new Point(xp,yp);
+		}
+		return tab;
+	}
+	
 
+	public void draw(Graphics buffer) {
+		
+		buffer.setColor(Color.getHSBColor((float)(this.z*0.01), 1, 1));
+		Point[] tab = this.perspective();
+		
+		int n = tab.length;
+		int[] tabY = new int[n];
+		int[] tabX = new int[n];
+		for(int i = 0 ; i<= tab.length-1 ; i++){
+			tabX[i] = (int) tab[i].x;
+			tabY[i] = (int) tab[i].y;
+		}
+		buffer.fillPolygon(tabX, tabY, n);
+		
+		buffer.setColor(Color.BLACK);
+		for(int j = 0; j <= tab.length -2 ; j++){ //On parcourt les points du polygones pour tracer ses arretes
+			buffer.drawLine((int) tab[j].x, (int) tab[j].y, (int) tab[j+1].x, (int) tab[j+1].y);
+		}
+		buffer.drawLine((int) tab[this.npoints-1].x, (int) tab[this.npoints-1].y, (int) tab[0].x, (int) tab[0].y);
+		
+	}
 
+	
+	//méthode à finir
+	public static int[] tri (LinkedList<Objet> liste){ 
+		int[] tab = new int[liste.size()];
+		
+		LinkedList<Objet> listCur = new LinkedList<Objet>();
+		listCur.addAll(liste);
+		Objet cur;
+		int j;
+		
+		
+		for(int i = 1; i< listCur.size() ;i++){
+			cur = listCur.get(i);
+			j = i;
+			while((j>0)&&(listCur.get(j-1).z< cur.z)){
+				listCur.set(j, listCur.get(j-1));
+				tab[j-1] = j;
+				j = j-1;
+			}
+			listCur.set(j, cur);
+			tab[i] = j ;
+		}
+		return tab;
+	}
 	
 }

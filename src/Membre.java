@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
@@ -26,11 +27,15 @@ public class Membre extends Objet {
 		velocity = new Vector(0,0);
 		setMomentOfInertia();
 		forces = new ArrayList<Vector>();
+		
+		z = 0;
 	}
 
 	public Membre(double[] tabX, double[] tabY, double amasse) {
 		super(tabX, tabY);
 		this.mass = amasse;
+		
+		z = 0;
 	}
 	
 	
@@ -112,13 +117,5 @@ public class Membre extends Objet {
 		
 	}
 
-	@Override
-	public void draw(Graphics buffer) {
-		for(int j = 0; j <= this.npoints -2 ; j++){ //On parcourt les points du polygones pour tracer ses arretes
-			buffer.drawLine((int) this.points[j].x, (int) this.points[j].y, (int) this.points[j+1].x, (int) this.points[j+1].y);
-		}
-		buffer.drawLine((int) this.points[this.npoints-1].x, (int) this.points[this.npoints-1].y, (int) this.points[0].x, (int) this.points[0].y);
-	
-	}
 
 }

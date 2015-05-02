@@ -5,12 +5,6 @@ import java.util.LinkedList;
 
 public class Obstacle extends Objet {
 	
-	protected double z; //profondeur : z positif: devant, z negatif : derriere
-	protected double dz;
-	
-	public static Point Obj = new Point(0, 100); //Objectif pour filmer l image
-	public static double zP = -20; //la profondeur du plan ecran de la camera
-	public static double zOb = -10; //profondeur de l'objectif
 	
 	protected boolean actif; //actif si l'objet est dans la zone de contact
 	
@@ -37,18 +31,12 @@ public class Obstacle extends Objet {
 	}
 	
 	public void setZ(double az){
-		//on voit si le polygone devient actif
-		
-		if((actif == false)&&(az <= 10)){
-			actif = true;
-		}
-		if((actif == true) && (az >=10)){
-			actif = false;
-		}
 		this.z = az;
-		if((az<-9)||(az>10000)){
+		
+		if( ((az<-5)||(az>100)) && (az*this.getDz()>0) ){
 			this.setDz(-this.getDz());
 		}
+		
 	}	
 	public void setDz (double adz){
 		this.dz = adz;
@@ -86,36 +74,8 @@ public class Obstacle extends Objet {
 	
 	/* Cette méthode doit renvoyer un tableau de point selon la position (surtout la distance) de l'obstacle 
 	 * Le tableau de point doit correspondre aux points sur l ecran*/
-	public Point[] perspective (){
-		Point[] tab = new Point[this.npoints];
-		double xp, yp;
-		for(int i =0 ; i < this.npoints ; i++){
-			xp = Obj.x + (zP - zOb)*(this.points[i].x-Obj.x)/(this.z - zOb); //(zP - zOb) est la difference de z entre le plan et l objectif
-			yp = Obj.y + (zP - zOb)*(this.points[i].y-Obj.y)/(this.z - zOb);
-			
-			xp = FenetreDrunk.LARGEUR*0.5 - xp;
-			yp = FenetreDrunk.HAUTEUR*0.5 + yp;
-			tab[i] = new Point(xp,yp);
-		}
-		return tab;
-	}
-
-	@Override
-	public void draw(Graphics buffer) {
-		Point[] tab = this.perspective();
-		for(int j = 0; j <= tab.length -2 ; j++){ //On parcourt les points du polygones pour tracer ses arretes
-			buffer.drawLine((int) tab[j].x, (int) tab[j].y, (int) tab[j+1].x, (int) tab[j+1].y);
-		}
-		buffer.drawLine((int) tab[this.npoints-1].x, (int) tab[this.npoints-1].y, (int) tab[0].x, (int) tab[0].y);
-		
-	}
 	
 
-	public LinkedList<Point> IntersectListOb(Obstacle Ob){
-		if(Math.abs(this.z-Ob.z) <= 10){
-			return super.IntersectList(Ob);
-		}
-		return null;
-	}
+	
 
 }
