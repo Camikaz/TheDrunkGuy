@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -13,7 +15,7 @@ import javax.swing.Timer;
 
 
 public class FenetreDrunk extends JFrame implements MouseListener,
-		MouseMotionListener, ActionListener {
+		MouseMotionListener, ActionListener, KeyListener {
 	
 	private Timer timer;
 	private LinkedList<Objet> Liste; //La Liste de tout les objets a afficher
@@ -46,10 +48,10 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Point[] tablo = {A,B,C,D,E};
 		Obstacle Poly1 = new Obstacle(tablo,10,0);
 		
-		Point AA = new Point(-100,00);
-		Point BB = new Point(100,00);
-		Point CC = new Point(100,100);
-		Point DD = new Point(-100,100);
+		Point AA = new Point(2000,00);
+		Point BB = new Point(2100,00);
+		Point CC = new Point(2100,100);
+		Point DD = new Point(2000,100);
 		
 		Point[] tabloo = {AA,BB,CC,DD};
 		Obstacle Poly11 = new Obstacle(tabloo,5,0.01);
@@ -92,6 +94,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		addKeyListener(this);
 		
 		timer = new Timer(30,this);
 		timer.start();
@@ -120,7 +123,12 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		double y1;
 		
 		for(int i = -10; i <= 10; i++){
-			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(-9 - Obstacle.zOb); //-9 est la profondeur des lignes
+			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(10000 - Obstacle.zOb); //-9 est la profondeur des lignes
+			yO = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(-9 - Obstacle.zOb);
+			xO = LARGEUR*0.5 - xO;
+			yO = HAUTEUR*0.5 + yO;
+			
+			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(10000 - Obstacle.zOb); //-9 est la profondeur des lignes
 			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(-9 - Obstacle.zOb);
 			x1 = LARGEUR*0.5 - x1;
 			y1 = HAUTEUR*0.5 + y1;
@@ -244,6 +252,29 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+	if(arg0.getKeyChar()=='-'){
+		Obstacle.zP +=1;
+	}
+	if(arg0.getKeyChar()=='+'){
+		Obstacle.zP -=1;
+	}
+		
 	}
 
 }

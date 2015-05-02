@@ -46,7 +46,7 @@ public class Obstacle extends Objet {
 			actif = false;
 		}
 		this.z = az;
-		if((az<-9)||(az>100)){
+		if((az<-9)||(az>10000)){
 			this.setDz(-this.getDz());
 		}
 	}	

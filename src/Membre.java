@@ -2,7 +2,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 
-
 //Cette classe définit les objets du premier plan qui sont susceptibles de subir des forces, a priori que les membres du drunk guy
 
 public class Membre extends Objet {
