@@ -23,7 +23,7 @@ public abstract class Objet{
 	
 
 	
-	public static Point Obj = new Point(0, 100); //Objectif pour filmer l image
+	public static Point Obj = new Point(0, 500); //Objectif pour filmer l image
 	public static double zP = -20; //la profondeur du plan ecran de la camera
 	public static double zOb = -10; //profondeur de l'objectif
 	
@@ -298,7 +298,7 @@ public abstract class Objet{
 	
 
 	public void draw(Graphics buffer) {
-		
+		if(this.z > Obstacle.zOb){
 		buffer.setColor(Color.getHSBColor((float)( 0.5 + 0.5*Math.cos((this.z*0.01+((FenetreDrunk.temps*0.1)%100)))), (float) (0.7 + 0.2*Math.sin(FenetreDrunk.temps*0.001)), 1));
 		Point[] tab = this.perspective();
 		
@@ -317,6 +317,7 @@ public abstract class Objet{
 			buffer.drawLine((int) tab[j].x, (int) tab[j].y, (int) tab[j+1].x, (int) tab[j+1].y);
 		}
 		buffer.drawLine((int) tab[this.npoints-1].x, (int) tab[this.npoints-1].y, (int) tab[0].x, (int) tab[0].y);
+		}
 		
 	}
 

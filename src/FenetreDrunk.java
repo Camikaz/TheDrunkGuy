@@ -8,10 +8,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.util.LinkedList;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.Timer;
+
 
 
 public class FenetreDrunk extends JFrame implements MouseListener,
@@ -28,7 +38,33 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	public static double LARGEUR = 1000;
 	public static double HAUTEUR = 700;
 	
+	public static Mixer mixer;
+	public static Clip clip;
+	
 	public FenetreDrunk(){
+		
+		//Tout ceci sert à configurer le son
+		Mixer.Info[] mixInfos = AudioSystem.getMixerInfo();
+		
+		mixer = AudioSystem.getMixer(mixInfos[0]); //ok you got it
+		
+		DataLine.Info dataInfo = new DataLine.Info(Clip.class ,  null); // choisi un type de ligne (ici un clip)
+		try{ clip = (Clip) mixer.getLine(dataInfo);} // l'instance clip devient la ligne de mixer qui répond au critère DataLina.Info
+		catch(LineUnavailableException lue) { lue.printStackTrace(); }
+		
+		try {
+			URL soundURL = FenetreDrunk.class.getResource("Rank2.wav"); //va chercher le son
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundURL);
+			clip.open(audioStream);
+		}
+		catch(LineUnavailableException lue) { lue.printStackTrace(); }
+		catch(UnsupportedAudioFileException uafe)  {uafe.printStackTrace(); }
+		catch(IOException ioe) { ioe.printStackTrace();}
+		
+		//Place this wherever you want
+		clip.start(); //or c lip.loop(0); clip.loop(LOOP_CONTINUOUSLY);
+		//Fin config. son
+		
 		setSize((int)LARGEUR+this.getInsets().left + this.getInsets().right,(int)HAUTEUR+this.getInsets().top + this.getInsets().bottom);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
@@ -137,7 +173,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		LARGEUR = this.getWidth();
 		HAUTEUR = this.getHeight();
 		
-		// la merde d'Alestair pour faire des jolis petits traits
+		// affichage des lignes du sol
 		
 		buffer.setColor(Color.GRAY);
 		buffer.fillRect(0, 0, this.getWidth(), this.getHeight());
@@ -149,30 +185,30 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		double x1;
 		double y1;
 		
-		for(int i = -100; i <= 100; i++){
+		for(int i = -100; i <= 100; i++){ //Lignes de fuites
 			
-			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(10000 - Obstacle.zOb);
+			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(100*i -Obstacle.Obj.x)/(10000 - Obstacle.zOb);
 			yO = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(10000 - Obstacle.zOb);
 			xO = LARGEUR*0.5 +(Obstacle.Obj.x - xO);
 			yO = HAUTEUR*0.5 + (-Obstacle.Obj.y + yO);
 			
-			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(-9 - Obstacle.zOb); //-9 est la profondeurdu bout des lignes (lobjectif est a -10)
-			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(-9 - Obstacle.zOb);
+			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(100*i -Obstacle.Obj.x)/((int) (Obstacle.zOb+1) - Obstacle.zOb); //-9 est la profondeurdu bout des lignes (lobjectif est a -10)
+			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/((int) (Obstacle.zOb+1) - Obstacle.zOb);
 			x1 = LARGEUR*0.5 +(Obstacle.Obj.x - x1);
 			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
 			
 			buffer.setColor(Color.getHSBColor((float) (i*0.1), 1, 1));
 			buffer.drawLine(((int)(xO)),(int)(yO),(int)(x1),(int) y1);
 		}
-		for(int i = -9; i <= 500; i++){
-			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(-LARGEUR*0.5*10 -Obstacle.Obj.x)/(i - Obstacle.zOb); //i est la profondeur des lignes
+		for(int i = (int) (Obstacle.zOb+1); i <= (int) (Obstacle.zOb+501); i++){ //Lignes horizontales
+			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(-10000 -Obstacle.Obj.x)/(i - Obstacle.zOb); //i est la profondeur des lignes
 			
 			yO = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(i - Obstacle.zOb);
 			
 			xO = LARGEUR*0.5 +(Obstacle.Obj.x - xO);
 			yO = HAUTEUR*0.5 + (-Obstacle.Obj.y + yO);
 			
-			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.5*10 -Obstacle.Obj.x)/(i - Obstacle.zOb);
+			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(10000 -Obstacle.Obj.x)/(i - Obstacle.zOb);
 			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(i - Obstacle.zOb);
 			x1 = LARGEUR*0.5 +(Obstacle.Obj.x - x1);
 			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
@@ -236,8 +272,18 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);
 		
-		Obstacle.Obj.x += 0.1*(-LARGEUR*0.5 + sourx);
+		//Simule le point de vue du marcheur
+		Obstacle.Obj.x += 10*Math.cos(temps*0.1);
+		Obstacle.Obj.y += -10*Math.sin(temps*0.2);
+		
+		//Pour bouger avec la souris
+		Obstacle.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
 		Obstacle.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
+		
+		//Pour que la camera avance (provoque es glitchs car j'ai jamais géré le cas ou zObjet = zObjectif
+		/*
+		Obstacle.zOb+=0.1;
+		Obstacle.zP+=0.1;*/
 		
 		
 		repaint();
