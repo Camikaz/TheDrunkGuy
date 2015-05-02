@@ -123,15 +123,17 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		double y1;
 		
 		for(int i = -10; i <= 10; i++){
+			
 			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(10000 - Obstacle.zOb); //-9 est la profondeur des lignes
-			yO = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(-9 - Obstacle.zOb);
+			yO = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(10000 - Obstacle.zOb);
 			xO = LARGEUR*0.5 - xO;
 			yO = HAUTEUR*0.5 + yO;
 			
-			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(10000 - Obstacle.zOb); //-9 est la profondeur des lignes
+			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(-9 - Obstacle.zOb); //-9 est la profondeur des lignes
 			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(-9 - Obstacle.zOb);
 			x1 = LARGEUR*0.5 - x1;
 			y1 = HAUTEUR*0.5 + y1;
+			
 			buffer.setColor(Color.getHSBColor((float) (i*0.1), 1, 1));
 			buffer.drawLine(((int)(xO)),(int)(yO),(int)(x1),(int) y1);
 		}
