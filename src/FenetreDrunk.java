@@ -22,8 +22,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	private Graphics buffer;
 	private BufferedImage ArrierePlan;
 	private int temps;
-	private double sourx;
-	private double soury;
+	private double sourx = LARGEUR*0.5;
+	private double soury = HAUTEUR* 0.5;
 	
 	public static double LARGEUR = 1000;
 	public static double HAUTEUR = 1000;
@@ -112,6 +112,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		HAUTEUR = this.getHeight();
 		
 		// la merde d'Alestair pour faire des jolis petits traits
+		
 		buffer.setColor(Color.GRAY);
 		buffer.fillRect(0, 0, this.getWidth(), this.getHeight());
 				
@@ -122,33 +123,33 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		double x1;
 		double y1;
 		
-		for(int i = -10; i <= 10; i++){
+		for(int i = -100; i <= 100; i++){
 			
-			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(10000 - Obstacle.zOb); //-9 est la profondeur des lignes
+			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(10000 - Obstacle.zOb);
 			yO = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(10000 - Obstacle.zOb);
-			xO = LARGEUR*0.5 - xO;
-			yO = HAUTEUR*0.5 + yO;
+			xO = LARGEUR*0.5 +(Obstacle.Obj.x - xO);
+			yO = HAUTEUR*0.5 + (-Obstacle.Obj.y + yO);
 			
-			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(-9 - Obstacle.zOb); //-9 est la profondeur des lignes
+			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.05*i -Obstacle.Obj.x)/(-9 - Obstacle.zOb); //-9 est la profondeurdu bout des lignes (lobjectif est a -10)
 			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(-9 - Obstacle.zOb);
-			x1 = LARGEUR*0.5 - x1;
-			y1 = HAUTEUR*0.5 + y1;
+			x1 = LARGEUR*0.5 +(Obstacle.Obj.x - x1);
+			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
 			
 			buffer.setColor(Color.getHSBColor((float) (i*0.1), 1, 1));
 			buffer.drawLine(((int)(xO)),(int)(yO),(int)(x1),(int) y1);
 		}
 		for(int i = -9; i <= 500; i++){
-			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(-LARGEUR*0.5 -Obstacle.Obj.x)/(i - Obstacle.zOb); //i est la profondeur des lignes
+			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(-LARGEUR*0.5*10 -Obstacle.Obj.x)/(i - Obstacle.zOb); //i est la profondeur des lignes
 			
 			yO = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(i - Obstacle.zOb);
-			xO = LARGEUR*0.5 - xO;
 			
-			yO = HAUTEUR*0.5 + yO;
+			xO = LARGEUR*0.5 +(Obstacle.Obj.x - xO);
+			yO = HAUTEUR*0.5 + (-Obstacle.Obj.y + yO);
 			
-			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.5 -Obstacle.Obj.x)/(i - Obstacle.zOb);
+			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(LARGEUR*0.5*10 -Obstacle.Obj.x)/(i - Obstacle.zOb);
 			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(i - Obstacle.zOb);
-			x1 = LARGEUR*0.5 - x1;
-			y1 = HAUTEUR*0.5 + y1;
+			x1 = LARGEUR*0.5 +(Obstacle.Obj.x - x1);
+			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
 			buffer.setColor(Color.getHSBColor((float) (i*0.01), 1,(float) ((500-i)*0.002)));
 			buffer.drawLine(((int)(xO)),(int)(yO),(int)(x1),(int) y1);
 		}
@@ -182,8 +183,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		for(int l = 0 ; l <= PtInter.size()-1 ; l++){
 			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(PtInter.get(l).x -Obstacle.Obj.x)/(ZInter.get(l).z - Obstacle.zOb);
 			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(PtInter.get(l).y-Obstacle.Obj.y)/(ZInter.get(l).z - Obstacle.zOb);
-			x1 = LARGEUR*0.5 - x1;
-			y1 = HAUTEUR*0.5 + y1;
+			x1 = LARGEUR*0.5 +(Obstacle.Obj.x - x1);
+			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
 			buffer.drawString("Ca touche ",(int) (x1), (int) (y1));
 		}
 		
@@ -209,8 +210,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);
 		
-		Obstacle.Obj.x = -LARGEUR*0.5 + sourx;
-		Obstacle.Obj.y = HAUTEUR*0.5 - soury;
+		Obstacle.Obj.x += 0.1*(-LARGEUR*0.5 + sourx);
+		Obstacle.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
 		
 		
 		repaint();

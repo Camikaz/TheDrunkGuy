@@ -285,11 +285,12 @@ public abstract class Objet{
 		Point[] tab = new Point[this.npoints];
 		double xp, yp;
 		for(int i =0 ; i < this.npoints ; i++){
-			xp = Obj.x + (zP - zOb)*(this.points[i].x-Obj.x)/(this.z - zOb); //(zP - zOb) est la difference de z entre le plan et l objectif
-			yp = Obj.y + (zP - zOb)*(this.points[i].y-Obj.y)/(this.z - zOb);
 			
-			xp = FenetreDrunk.LARGEUR*0.5 - xp;
-			yp = FenetreDrunk.HAUTEUR*0.5 + yp;
+			xp = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(this.points[i].x-Obstacle.Obj.x)/(this.z - Obstacle.zOb); //(Obstacle.zP - Obstacle.zOb) est la difference de z entre le plan et l Obstacle.Objectif
+			yp = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(this.points[i].y-Obstacle.Obj.y)/(this.z - Obstacle.zOb);
+			
+			xp = FenetreDrunk.LARGEUR*0.5 +(Obstacle.Obj.x - xp);
+			yp = FenetreDrunk.HAUTEUR*0.5 + (-Obstacle.Obj.y + yp);
 			tab[i] = new Point(xp,yp);
 		}
 		return tab;
@@ -329,10 +330,8 @@ public abstract class Objet{
 		
 		LinkedList<Objet> listCur = new LinkedList<Objet>();
 		listCur.addAll(liste);
+		
 		Objet cur;
-		
-		
-		
 		
 		int j;
 		for(int i = 1; i < listCur.size() ;i++){

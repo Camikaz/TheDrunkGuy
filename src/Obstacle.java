@@ -33,7 +33,7 @@ public class Obstacle extends Objet {
 	public void setZ(double az){
 		this.z = az;
 		
-		if( ((az<-5)||(az>100)) && (az*this.getDz()>0) ){
+		if( ((az<-9)||(az>100)) && (az*this.getDz()>0) ){
 			this.setDz(-this.getDz());
 		}
 		
