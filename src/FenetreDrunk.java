@@ -286,7 +286,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//Simule le point de vue du marcheur qui oscille
 		Obstacle.Obj.x += 10*Math.cos(temps*0.1);
-		Obstacle.Obj.y += -10*Math.sin(temps*0.2);
+		Obstacle.Obj.y += -20*Math.sin(temps*0.2);
 		
 		//Pour bouger avec la souris
 		Obstacle.Obj.x += -0.1*(LARGEUR*0.5 - sourx);

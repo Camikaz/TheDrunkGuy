@@ -302,7 +302,7 @@ public abstract class Objet{
 	public void draw(Graphics buffer) {
 		if(this.z > Obstacle.zOb){ // on dessine seulement si l'objet est devant la camera
 			//reglage de la couleur variante
-			buffer.setColor(Color.getHSBColor((float)( 0.5 + 0.5*Math.cos((this.z*0.01+((FenetreDrunk.temps*0.1)%100)))), (float) (0.7 + 0.2*Math.sin(FenetreDrunk.temps*0.001)), 1));
+			buffer.setColor(Color.getHSBColor((float)( 0.5 + 0.5*Math.cos(this.z*0.01)), 0.7f, 1));
 			
 			Point[] tab = this.perspective();
 			
