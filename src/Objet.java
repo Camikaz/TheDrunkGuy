@@ -319,26 +319,32 @@ public abstract class Objet{
 	}
 
 	
-	//méthode à finir
+	//Renvoie un tableau dont l'index correspond au numero des Objet de liste, classe du plus proche au plus eloigne
 	public static int[] tri (LinkedList<Objet> liste){ 
 		int[] tab = new int[liste.size()];
+		
+		for(int i = 0 ; i< liste.size() ;i++){
+			tab[i] = i;
+		}
 		
 		LinkedList<Objet> listCur = new LinkedList<Objet>();
 		listCur.addAll(liste);
 		Objet cur;
+		
+		
+		
+		
 		int j;
-		
-		
-		for(int i = 1; i< listCur.size() ;i++){
+		for(int i = 1; i < listCur.size() ;i++){
 			cur = listCur.get(i);
 			j = i;
 			while((j>0)&&(listCur.get(j-1).z< cur.z)){
 				listCur.set(j, listCur.get(j-1));
-				tab[j-1] = j;
+				tab[j] = tab[j-1];
 				j = j-1;
 			}
 			listCur.set(j, cur);
-			tab[i] = j ;
+			tab[j] = i;
 		}
 		return tab;
 	}
