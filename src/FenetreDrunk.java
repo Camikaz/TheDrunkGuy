@@ -21,12 +21,12 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	private LinkedList<Objet> Liste; //La Liste de tout les objets a afficher
 	private Graphics buffer;
 	private BufferedImage ArrierePlan;
-	private int temps;
+	public static int temps;
 	private double sourx = LARGEUR*0.5;
 	private double soury = HAUTEUR* 0.5;
 	
 	public static double LARGEUR = 1000;
-	public static double HAUTEUR = 1000;
+	public static double HAUTEUR = 700;
 	
 	public FenetreDrunk(){
 		setSize((int)LARGEUR+this.getInsets().left + this.getInsets().right,(int)HAUTEUR+this.getInsets().top + this.getInsets().bottom);
@@ -48,13 +48,15 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Point[] tablo = {A,B,C,D,E};
 		Objet Poly1 = new Obstacle(tablo,10,-0.01);
 		
+		
+		
 		Point AA = new Point(00,00);
 		Point BB = new Point(100,00);
 		Point CC = new Point(100,100);
 		Point DD = new Point(0000,100);
 		
 		Point[] tabloo = {AA,BB,CC,DD};
-		Obstacle Poly11 = new Obstacle(tabloo,5,0.01);
+		Obstacle Poly11 = new Obstacle(tabloo,5,0.015);
 		
 		Point A2 = new Point(000,400);
 		Point B2 = new Point(000,600);
@@ -84,13 +86,37 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		
 
-		//fin de creation
-		
 		Liste.add(Poly1);
 		Liste.add(Poly11);
 		Liste.add(Poly2);
 		Liste.add(Poly3);
 		Liste.add(Poly4);
+		
+		//Des maisons
+		for(int i = 0; i< 100 ; i++){
+			A = new Point(1000,0);
+			B = new Point(2000,0);
+			C = new Point(2000,2000);
+			D = new Point(1500,2500);
+			E = new Point(1000,2000);
+			Point[] tabloCo = {A,B,C,D,E};
+			Objet Maison = new Obstacle(tabloCo, i*10 , 0);
+			Liste.add(Maison);
+		}
+		
+		for(int i = 0; i< 100 ; i++){
+			A = new Point(-1000,0);
+			B = new Point(-2000,0);
+			C = new Point(-2000,2000);
+			D = new Point(-1500,2500);
+			E = new Point(-1000,2000);
+			Point[] tabloCo = {A,B,C,D,E};
+			Objet Maison = new Obstacle(tabloCo, i*10 , 0);
+			Liste.add(Maison);
+		}
+
+		//fin de creation
+		
 		
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -222,7 +248,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -235,7 +260,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 

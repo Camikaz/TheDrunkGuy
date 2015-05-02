@@ -299,7 +299,7 @@ public abstract class Objet{
 
 	public void draw(Graphics buffer) {
 		
-		buffer.setColor(Color.getHSBColor((float)(this.z*0.01), 1, 1));
+		buffer.setColor(Color.getHSBColor((float)( 0.5 + 0.5*Math.cos((this.z*0.01+((FenetreDrunk.temps*0.1)%100)))), (float) (0.7 + 0.2*Math.sin(FenetreDrunk.temps*0.001)), 1));
 		Point[] tab = this.perspective();
 		
 		int n = tab.length;
@@ -311,7 +311,8 @@ public abstract class Objet{
 		}
 		buffer.fillPolygon(tabX, tabY, n);
 		
-		buffer.setColor(Color.BLACK);
+
+		buffer.setColor(Color.getHSBColor((float)( 0.5 + 0.5*Math.cos((this.z*0.01+((FenetreDrunk.temps*0.1)%100)))), (float) (0.7 + 0.2*Math.sin(FenetreDrunk.temps*0.001)), 0.5f));
 		for(int j = 0; j <= tab.length -2 ; j++){ //On parcourt les points du polygones pour tracer ses arretes
 			buffer.drawLine((int) tab[j].x, (int) tab[j].y, (int) tab[j+1].x, (int) tab[j+1].y);
 		}
