@@ -50,6 +50,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	//2 objets utiles pour la musique
 	public static Mixer mixer;
 	public static Clip clip;
+	public static Clip sonCollision;
 
 	public FenetreDrunk(){
 
@@ -71,9 +72,22 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		catch(UnsupportedAudioFileException uafe)  {uafe.printStackTrace(); }
 		catch(IOException ioe) { ioe.printStackTrace();}
 
+		//tentative de configuration du son collision
+		try{ sonCollision = (Clip) mixer.getLine(dataInfo);}
+		catch(LineUnavailableException lue) { lue.printStackTrace(); }
+		try {
+			URL soundURL = FenetreDrunk.class.getResource("bounce.wav"); //va chercher le son
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundURL);
+			sonCollision.open(audioStream);
+		}
+		catch(LineUnavailableException lue) { lue.printStackTrace(); }
+		catch(UnsupportedAudioFileException uafe)  {uafe.printStackTrace(); }
+		catch(IOException ioe) { ioe.printStackTrace();}
+		sonCollision.setLoopPoints(0,32000);
+
 		//Place this wherever you want
 		//DESACTIVER CECI POUR ENLEVER LA MUSIQUE  (on mettre un bouton pour mettre en pause le son)
-		clip.start(); //or c lip.loop(0); clip.loop(LOOP_CONTINUOUSLY);
+		clip.start(); //or clip.loop(0); clip.loop(LOOP_CONTINUOUSLY);
 		//Fin de la configuration du son
 
 		//Initialisation de la fenetre
@@ -86,8 +100,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 		//Declaration de la liste des objets
 		Liste = new LinkedList<Objet>();
-		
-		
+
+
 		/*Creation des polygones*/
 		Point A = new Point(200,0);
 		Point B = new Point(300,0);
@@ -261,12 +275,13 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 						PtInter.addAll(Liste.get(i).IntersectList(Liste.get(j))); //On ajoute a la liste d intersections la liste d intersection entre i et j
 						for(int k = 0; k < Liste.get(i).IntersectList(Liste.get(j)).size() ; k++) {
 							ZInter.add(Liste.get(i));
+							sonCollision.start(); // ne joue qu'une fois pour le moment...
 						}
 					}
 				}
 			}
 		}
-		buffer.drawString("Ca touche "+ PtInter.size() +" fois !", 20, 50);
+		buffer.drawString("Ca touche " + PtInter.size() + " fois !", 20, 50);
 
 		for(int l = 0 ; l <= PtInter.size()-1 ; l++){
 			//Calcul de la position a l ecran des pt d'intersection pour ecrire "�a touche'
@@ -274,9 +289,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(PtInter.get(l).y-Obstacle.Obj.y)/(ZInter.get(l).z - Obstacle.zOb);
 			x1 = LARGEUR*0.5 +(Obstacle.Obj.x - x1);
 			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
-			buffer.drawString("Ca touche ",(int) (x1), (int) (y1));
+			buffer.drawString("Ca touche ", (int) (x1), (int) (y1));
 		}
-
 
 		g.drawImage(ArrierePlan,0,0,this);
 	}
@@ -377,17 +391,16 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-	if(arg0.getKeyChar()=='-'){
-		Obstacle.zP +=1;
-	}
-	if(arg0.getKeyChar()=='+'){
-		Obstacle.zP -=1;
-	}
-	if(arg0.getKeyChar()=='m'){
-		if(clip.isActive()){clip.stop();}
-		else {clip.start();}
-	}
-
+		if(arg0.getKeyChar()=='-'){
+			Obstacle.zP +=1;
+		}
+		if(arg0.getKeyChar()=='+'){
+			Obstacle.zP -=1;
+		}
+		if(arg0.getKeyChar()=='m'){
+			if(clip.isActive()){clip.stop();}
+			else {clip.start();}
+		}
 	}
 
 }
