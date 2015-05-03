@@ -402,10 +402,10 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		if(arg0.getKeyChar()=='-'){
-			if(Obstacle.zP<-11){
+			if(Obstacle.zP<Obstacle.zOb-1){
 				Obstacle.zP +=1;
 			} else {
-				Obstacle.zP=-11;
+				Obstacle.zP=Obstacle.zOb -1;
 			}
 		}
 		if(arg0.getKeyChar()=='+'){
