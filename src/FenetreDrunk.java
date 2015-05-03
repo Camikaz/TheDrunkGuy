@@ -43,6 +43,10 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	public static double LARGEUR = 1000;
 	public static double HAUTEUR = 700;
 
+	// taux d'alcoolémie (est-ce la bonne classe?) - augmente au fil du temps,
+	// influe sur le mouvement du bonhomme et peut-être celui de la camera
+	public double tauxAlcoolemie = 1;
+
 	//2 objets utiles pour la musique
 	public static Mixer mixer;
 	public static Clip clip;
@@ -290,13 +294,14 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		}
 
 		// juste pour test un peu de deplacement elementaire
-		Liste.get(0).translate(Math.cos(temps*0.01), 0);
+		Liste.get(0).translate(Math.cos(temps * 0.01), 0);
 		Liste.get(0).rotate(5*Math.cos(temps*0.01), Liste.get(0).points[2]);
 		Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);
 
 		//Simule le point de vue du marcheur qui oscille
+		tauxAlcoolemie *=Math.log(1+temps/600);
 		Obstacle.Obj.x += 10*Math.cos(temps*0.1);
-		Obstacle.Obj.y += -20*Math.sin(temps*0.2);
+		Obstacle.Obj.y += (-20)*Math.sin(temps*0.2);
 
 		//Pour bouger avec la souris
 		Obstacle.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
