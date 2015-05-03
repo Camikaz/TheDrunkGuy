@@ -158,7 +158,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//Des maisons
 		for(int i = 0; i< 100 ; i++){
-			double positionLaterale = 1000*i*Math.random();
+			double positionLaterale = 10000*Math.random();
 			System.out.println(positionLaterale);
 			A = new Point(positionLaterale-500,0);
 			B = new Point(positionLaterale+500,0);
@@ -172,7 +172,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//Encore des maisons
 		for(int i = 0; i< 100 ; i++){
-			double positionLaterale = -1000*i*Math.random();
+			double positionLaterale = -10000*Math.random();
 			System.out.println(positionLaterale);
 			A = new Point(positionLaterale-500,0);
 			B = new Point(positionLaterale+500,0);
