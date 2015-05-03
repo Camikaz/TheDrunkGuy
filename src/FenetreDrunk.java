@@ -146,6 +146,15 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste.add(Poly2);
 		Liste.add(Poly3);
 		Liste.add(Poly4);
+
+		//Rectangle qui définit le DrunkGuy - dimensions
+		Point dg1 = new Point(-150,0);
+		Point dg2 = new Point(-150,700);
+		Point dg3 = new Point(150,700);
+		Point dg4 = new Point(150,0);
+		Point[] tabGuy = {dg1, dg2, dg3, dg4};
+		Objet Guy = new Obstacle(tabGuy, 10, 0);
+		Liste.add(Guy);
 		
 		//Des maisons
 		for(int i = 0; i< 100 ; i++){
@@ -155,7 +164,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			D = new Point(1500,2500);
 			E = new Point(1000,2000);
 			Point[] tabloCo = {A,B,C,D,E};
-			Objet Maison = new Obstacle(tabloCo, i*10 , 0);
+			Objet Maison = new Obstacle(tabloCo, i*20 , 0);
 			Liste.add(Maison);
 		}
 		
@@ -167,7 +176,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			D = new Point(-1500,2500);
 			E = new Point(-1000,2000);
 			Point[] tabloCo = {A,B,C,D,E};
-			Objet Maison = new Obstacle(tabloCo, i*10 , 0);
+			Objet Maison = new Obstacle(tabloCo, i*20 , 0);
 			Liste.add(Maison);
 		}
 
@@ -268,6 +277,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			}
 		}
 		buffer.drawString("Ca touche "+ PtInter.size() +" fois !", 20, 50);
+
 		
 		for(int l = 0 ; l <= PtInter.size()-1 ; l++){
 			//Calcul de la position a l ecran des pt d'intersection pour ecrire "�a touche'
@@ -277,7 +287,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
 			buffer.drawString("Ca touche ",(int) (x1), (int) (y1));
 		}
-		
 		
 		g.drawImage(ArrierePlan,0,0,this);
 	}
