@@ -45,7 +45,7 @@ public abstract class Objet{
 		}
 	}
 	
-	// Pourquoi la méthode est abstraite si la classe l'est déjà? Je la mets en commentaire en attendant - Reda
+	// Pourquoi la mï¿½thode est abstraite si la classe l'est dï¿½jï¿½? Je la mets en commentaire en attendant - Reda
 	public abstract void move();
 	
 	//la methode est abstraite, cela signifie que chaque classes filles devra avoir sa classe move, et donc son propre deplacement
@@ -117,7 +117,7 @@ public abstract class Objet{
 		Point A;
 		for(int i= 0; i<= this.npoints -1; i++){
 			for(int j = 0; j<= poly2.npoints -1 ; j++){
-				if(i!=this.npoints-1){ //Pour ne pas dépasser la taille du tableau
+				if(i!=this.npoints-1){ //Pour ne pas dï¿½passer la taille du tableau
 					if(j!= poly2.npoints-1){
 						A = IntersectSegmP( this.points[i], this.points[i+1], poly2.points[j], poly2.points[j+1]);
 						if(A!=null){
@@ -259,7 +259,7 @@ public abstract class Objet{
 		double p2 = (D.y - C.y) / (D.x - C.x);
 		double xI = 0;
 		
-		if(p1 == p2){ //Cas des pentes égales
+		if(p1 == p2){ //Cas des pentes ï¿½gales
 			if( C.y == A.y + p1 * (C.x-A.x) ){
 				if( (C.x>=Math.min(A.x,B.x))&&(C.x<=Math.max(A.x, B.x)) ){
 					return C;
@@ -339,7 +339,7 @@ public abstract class Objet{
 		Objet cur;
 		int j;
 		
-		//Methode du tri par insertion, plutôt rapide pour des petits effectifs ou des effectifs presque triés
+		//Methode du tri par insertion, plutï¿½t rapide pour des petits effectifs ou des effectifs presque triï¿½s
 		for(int i = 1; i < listCur.size() ;i++){
 			cur = listCur.get(i);
 			j = i;
