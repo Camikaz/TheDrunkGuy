@@ -1,5 +1,4 @@
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -80,13 +79,13 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		catch(IOException ioe) { ioe.printStackTrace();}
 		sonCollision.setLoopPoints(2000,22000);
 
-		//Place this wherever you want
-		//DESACTIVER CECI POUR ENLEVER LA MUSIQUE  (on mettre un bouton pour mettre en pause le son)
+		//Place this wherever you want - Appuyer sur M pour arrêter la musique
 		clip.start(); //or c lip.loop(0); clip.loop(LOOP_CONTINUOUSLY);
 		//Fin de la configuration du son
 		
 		//Initialisation de la fenetre
 		setSize((int)LARGEUR+this.getInsets().left + this.getInsets().right,(int)HAUTEUR+this.getInsets().top + this.getInsets().bottom);
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		setTitle("Drunk Guy");
@@ -159,7 +158,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		//Des maisons
 		for(int i = 0; i< 100 ; i++){
 			double positionLaterale = 10000*Math.random();
-			System.out.println(positionLaterale);
+			//System.out.println(positionLaterale);
 			A = new Point(positionLaterale-500,0);
 			B = new Point(positionLaterale+500,0);
 			C = new Point(positionLaterale+500,2000);
@@ -173,7 +172,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		//Encore des maisons
 		for(int i = 0; i< 100 ; i++){
 			double positionLaterale = -10000*Math.random();
-			System.out.println(positionLaterale);
+			//System.out.println(positionLaterale);
 			A = new Point(positionLaterale-500,0);
 			B = new Point(positionLaterale+500,0);
 			C = new Point(positionLaterale+500,2000);
@@ -222,7 +221,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		buffer.drawLine(0,((int)(yO)),this.getWidth(), (int)(yO));
 		
 		
-		//pour tous �a il faut comprendre comment j ai fait la perspective : un point sera dessine en projetant son x et son y sur un plan en passant par l objectif, on s y perd je l avoue mais j ai le truc en tete
+		//pour tous �a il faut comprendre comment j ai fait la perspective : un point sera dessine en projetant son x et
+		// son y sur un plan en passant par l objectif, on s y perd je l avoue mais j ai le truc en tete
 		for(int i = -100; i <= 100; i++){ //Lignes de fuites
 			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(100*i -Obstacle.Obj.x)/(10000 - Obstacle.zOb); //xO devient le x de la projection sur le plan de la camera
 			yO = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(10000 - Obstacle.zOb); //yO devient le y de la projection sur le plan de la camera
@@ -273,7 +273,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 						PtInter.addAll(Liste.get(i).IntersectList(Liste.get(j))); //On ajoute a la liste d intersections la liste d intersection entre i et j
 						for(int k = 0; k < Liste.get(i).IntersectList(Liste.get(j)).size() ; k++) {
 							ZInter.add(Liste.get(i));
-							sonCollision.setFramePosition(0);
+							sonCollision.setFramePosition(0); //douce mélodie (qui joue pas toujours)
 							sonCollision.loop(0);
 						}
 					}
@@ -291,6 +291,13 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
 			buffer.drawString("Ca touche ",(int) (x1), (int) (y1));
 		}
+
+		// petits tests pour un HUD
+		Font police = new Font("Courier", Font.BOLD, 30); //mettez any font you like !
+		buffer.setFont(police);
+		buffer.setColor(Color.WHITE);
+		int score =(int)(temps*0.03);
+		buffer.drawString("Score : " + score, 20, (int)HAUTEUR-20);
 		
 		g.drawImage(ArrierePlan,0,0,this);
 	}
