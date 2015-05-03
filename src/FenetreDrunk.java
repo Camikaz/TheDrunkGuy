@@ -165,7 +165,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			D = new Point(positionLaterale,2500);
 			E = new Point(positionLaterale-500,2000);
 			Point[] tabloCo = {A,B,C,D,E};
-			Objet Maison = new Obstacle(tabloCo, i*20 , 0);
+			Objet Maison = new Obstacle(tabloCo, i*25 , 0);
 			Liste.add(Maison);
 		}
 		
@@ -179,7 +179,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			D = new Point(positionLaterale,2500);
 			E = new Point(positionLaterale-500,2000);
 			Point[] tabloCo = {A,B,C,D,E};
-			Objet Maison = new Obstacle(tabloCo, i*20 , 0);
+			Objet Maison = new Obstacle(tabloCo, i*25 , 0);
 			Liste.add(Maison);
 		}
 
@@ -292,14 +292,14 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			buffer.drawString("Ca touche ",(int) (x1), (int) (y1));
 		}
 
-		// petits tests pour un HUD
+		// petits tests pour un HUD - on ajoutera du texte en fct de l'évolution du jeu :)
 		int score =(int)(temps*0.03);
 
 		Font police = new Font("Courier", Font.BOLD, 24); //mettez any font you like !
 		buffer.setFont(police);
 		buffer.setColor(Color.WHITE);
 		buffer.drawString("Score : " + score, 20, (int)HAUTEUR-20);
-		buffer.drawString("Vies : "+ 3, (int)LARGEUR-150, (int)HAUTEUR-20);
+		buffer.drawString("Vies : "+ 3, (int)LARGEUR-150, (int)HAUTEUR-20); // 3 vies, on verra comment on gère ça hein
 		
 		g.drawImage(ArrierePlan,0,0,this);
 	}
@@ -325,14 +325,14 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Obstacle.Obj.x += 10*Math.cos(temps*0.1);
 		Obstacle.Obj.y += -20*Math.sin(temps*0.2);
 		
-		//Pour bouger avec la souris - limité à y€[50,3000]
+		//Pour bouger avec la souris - limité à y€[50,7000]
 		Obstacle.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
-		if(Obstacle.Obj.y >=50 && Obstacle.Obj.y<=3000){
+		if(Obstacle.Obj.y >=50 && Obstacle.Obj.y<=7000){
 			Obstacle.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
 		} else if (Obstacle.Obj.y <50){
 			Obstacle.Obj.y = 50;
-		} else if (Obstacle.Obj.y>3000 ){
-			Obstacle.Obj.y = 3000;
+		} else if (Obstacle.Obj.y>7000 ){
+			Obstacle.Obj.y = 7000;
 		}
 		
 		//Pour que la camera avance (provoque des glitchs car j'ai jamais g�r� le cas ou zObjet = zObjectif
