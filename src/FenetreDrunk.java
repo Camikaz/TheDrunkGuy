@@ -158,11 +158,13 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//Des maisons
 		for(int i = 0; i< 100 ; i++){
-			A = new Point(1000,0);
-			B = new Point(2000,0);
-			C = new Point(2000,2000);
-			D = new Point(1500,2500);
-			E = new Point(1000,2000);
+			double positionLaterale = 1000*i*Math.random();
+			System.out.println(positionLaterale);
+			A = new Point(positionLaterale-500,0);
+			B = new Point(positionLaterale+500,0);
+			C = new Point(positionLaterale+500,2000);
+			D = new Point(positionLaterale,2500);
+			E = new Point(positionLaterale-500,2000);
 			Point[] tabloCo = {A,B,C,D,E};
 			Objet Maison = new Obstacle(tabloCo, i*20 , 0);
 			Liste.add(Maison);
@@ -170,11 +172,13 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//Encore des maisons
 		for(int i = 0; i< 100 ; i++){
-			A = new Point(-1000,0);
-			B = new Point(-2000,0);
-			C = new Point(-2000,2000);
-			D = new Point(-1500,2500);
-			E = new Point(-1000,2000);
+			double positionLaterale = -1000*i*Math.random();
+			System.out.println(positionLaterale);
+			A = new Point(positionLaterale-500,0);
+			B = new Point(positionLaterale+500,0);
+			C = new Point(positionLaterale+500,2000);
+			D = new Point(positionLaterale,2500);
+			E = new Point(positionLaterale-500,2000);
 			Point[] tabloCo = {A,B,C,D,E};
 			Objet Maison = new Obstacle(tabloCo, i*20 , 0);
 			Liste.add(Maison);
@@ -312,9 +316,15 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Obstacle.Obj.x += 10*Math.cos(temps*0.1);
 		Obstacle.Obj.y += -20*Math.sin(temps*0.2);
 		
-		//Pour bouger avec la souris
+		//Pour bouger avec la souris - limité à y€[50,3000]
 		Obstacle.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
-		Obstacle.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
+		if(Obstacle.Obj.y >=50 && Obstacle.Obj.y<=3000){
+			Obstacle.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
+		} else if (Obstacle.Obj.y <50){
+			Obstacle.Obj.y = 50;
+		} else if (Obstacle.Obj.y>3000 ){
+			Obstacle.Obj.y = 3000;
+		}
 		
 		//Pour que la camera avance (provoque des glitchs car j'ai jamais g�r� le cas ou zObjet = zObjectif
 		/*
@@ -383,7 +393,11 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		if(arg0.getKeyChar()=='-'){
-			Obstacle.zP +=1;
+			if(Obstacle.zP<-11){
+				Obstacle.zP +=1;
+			} else {
+				Obstacle.zP=-11;
+			}
 		}
 		if(arg0.getKeyChar()=='+'){
 			Obstacle.zP -=1;
