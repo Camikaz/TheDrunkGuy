@@ -293,11 +293,13 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		}
 
 		// petits tests pour un HUD
-		Font police = new Font("Courier", Font.BOLD, 30); //mettez any font you like !
+		int score =(int)(temps*0.03);
+
+		Font police = new Font("Courier", Font.BOLD, 24); //mettez any font you like !
 		buffer.setFont(police);
 		buffer.setColor(Color.WHITE);
-		int score =(int)(temps*0.03);
 		buffer.drawString("Score : " + score, 20, (int)HAUTEUR-20);
+		buffer.drawString("Vies : "+ 3, (int)LARGEUR-150, (int)HAUTEUR-20);
 		
 		g.drawImage(ArrierePlan,0,0,this);
 	}
