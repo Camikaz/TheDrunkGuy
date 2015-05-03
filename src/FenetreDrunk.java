@@ -300,7 +300,11 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 		//Pour bouger avec la souris
 		Obstacle.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
-		Obstacle.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
+		if(Obstacle.Obj.y >0){
+			Obstacle.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
+		} else {
+			Obstacle.Obj.y = 0;
+		}
 
 		//Pour que la camera avance (provoque des glitchs car j'ai jamais g�r� le cas ou zObjet = zObjectif
 		/*
