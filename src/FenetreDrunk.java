@@ -28,35 +28,40 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	
 	private Timer timer;
 	private LinkedList<Objet> Liste; //La Liste de tout les objets a afficher
-	
+
 	private Graphics buffer; //On dessine la dedans, vous connaissez le principe d'un buffer
 	private BufferedImage ArrierePlan;
-	
+
 	public static int temps;
-	
+
 	//Les valeurs initiales de la position de la souris, modifi�s par le MouseListener
 	private double sourx = LARGEUR*0.5;
 	private double soury = HAUTEUR* 0.5;
-	
+
 	//Hauteur et Largeur initiale de la fenetre (pour l'instant j'ai fait en sorte que �a soir resizable)
 	public static double LARGEUR = 1000;
 	public static double HAUTEUR = 700;
-	
+
+	// taux d'alcoolémie (est-ce la bonne classe?) - augmente au fil du temps,
+	// influe sur le mouvement du bonhomme et peut-être celui de la camera
+	public double tauxAlcoolemie = 1;
+
 	//2 objets utiles pour la musique
 	public static Mixer mixer;
-	public static Clip clip, sonCollision;
-	
+	public static Clip clip;
+	public static Clip sonCollision;
+
 	public FenetreDrunk(){
-		
+
 		//Tout ceci sert � configurer le son
 		Mixer.Info[] mixInfos = AudioSystem.getMixerInfo();
-		
+
 		mixer = AudioSystem.getMixer(mixInfos[0]); //ok you got it
-		
+
 		DataLine.Info dataInfo = new DataLine.Info(Clip.class ,  null); // choisi un type de ligne (ici un clip)
 		try{ clip = (Clip) mixer.getLine(dataInfo);} // l'instance clip devient la ligne de mixer qui r�pond au crit�re DataLina.Info
 		catch(LineUnavailableException lue) { lue.printStackTrace(); }
-		
+
 		try {
 			URL soundURL = FenetreDrunk.class.getResource("Rank2.wav"); //va chercher le son
 			AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundURL);
@@ -66,7 +71,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		catch(UnsupportedAudioFileException uafe)  {uafe.printStackTrace(); }
 		catch(IOException ioe) { ioe.printStackTrace();}
 
-		//config du son collision "bounce.wav"
+		//tentative de configuration du son collision
 		try{ sonCollision = (Clip) mixer.getLine(dataInfo);}
 		catch(LineUnavailableException lue) { lue.printStackTrace(); }
 		try {
@@ -77,68 +82,77 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		catch(LineUnavailableException lue) { lue.printStackTrace(); }
 		catch(UnsupportedAudioFileException uafe)  {uafe.printStackTrace(); }
 		catch(IOException ioe) { ioe.printStackTrace();}
-		sonCollision.setLoopPoints(2000,22000);
+		sonCollision.setLoopPoints(0,-1);
 
-		//Place this wherever you want - Appuyer sur M pour arrêter la musique
-		clip.start(); //or c lip.loop(0); clip.loop(LOOP_CONTINUOUSLY);
+		//Place this wherever you want
+		//DESACTIVER CECI POUR ENLEVER LA MUSIQUE  (on mettre un bouton pour mettre en pause le son)
+		clip.start(); //or clip.loop(0); clip.loop(LOOP_CONTINUOUSLY);
 		//Fin de la configuration du son
-		
+
 		//Initialisation de la fenetre
 		setSize((int)LARGEUR+this.getInsets().left + this.getInsets().right,(int)HAUTEUR+this.getInsets().top + this.getInsets().bottom);
-		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		setVisible(true);
 		setTitle("Drunk Guy");
-		
-		
+
+
 		//Declaration de la liste des objets
 		Liste = new LinkedList<Objet>();
-		
-		
+
+
 		/*Creation des polygones*/
 		Point A = new Point(200,0);
 		Point B = new Point(300,0);
 		Point C = new Point(400,600);
 		Point D = new Point(300,600);
 		Point E = new Point(0,300);
-		
+
 		Point[] tablo = {A,B,C,D,E};
 		Objet Poly1 = new Obstacle(tablo,10,-0.01); //On rentre dans l'objet un tablo de point, un z, et une vitesse dz
-		
+
 		Point AA = new Point(0,0);
 		Point BB = new Point(100,0);
 		Point CC = new Point(100,100);
 		Point DD = new Point(0,100);
-		
+
 		Point[] tabloo = {AA,BB,CC,DD};
 		Obstacle Poly11 = new Obstacle(tabloo,5,0.015);
-		
+
 		Point A2 = new Point(0,400);
 		Point B2 = new Point(0,600);
 		Point C2 = new Point(300,600);
 		Point D2 = new Point(300,400);
-		
+
 		Point[] tablo2 = {A2,B2,C2,D2};
-		
+
 		Obstacle Poly2 = new Obstacle(tablo2,0,0.01);
-		
+
 		Point A3 = new Point(800,300);
 		Point B3 = new Point(800,700);
 		Point C3 = new Point(1200,700);
 		Point D3 = new Point(1200,300);
 		Point E3 = new Point(650,500);
-		
+
 		Point[] tablo3 = {A3,E3,B3,C3,D3};
 		Obstacle Poly3 = new Obstacle(tablo3,5,0.02);
-		
+
 		Point A4 = new Point(-300,300);
 		Point B4 = new Point(-300,-300);
 		Point C4 = new Point(-100,-200);
 		Point D4 = new Point(-100,300);
-		
+
 		Point[] tablo4 = {A4,B4,C4,D4};
 		Obstacle Poly4 = new Obstacle(tablo4,5,0.01);
-		
+
+		//zozo : carré au milieu
+		/*Point A5 = new Point(-200,0);
+		Point B5 = new Point(-200,400);
+		Point C5 = new Point(200,400);
+		Point D5 = new Point(200,0);
+		Point[] carréCentral = {A5,B5,C5,D5};
+		Obstacle carre = new Obstacle(carréCentral);*/
+
 		//On ajoute les objets cr�es � la liste
 		Liste.add(Poly1);
 		Liste.add(Poly11);
@@ -210,10 +224,10 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		//Le fond
 		buffer.setColor(Color.GRAY);
 		buffer.fillRect(0, 0, this.getWidth(), this.getHeight());
-				
+
 		//ces variables vont nous servir pour toutes les lignes
 		double xO,yO,x1,y1;
-		
+
 		//Dessin de l'horizon en fonction de l objectif
 		buffer.setColor(Color.white);
 		xO = FenetreDrunk.LARGEUR*0.5 - Obstacle.Obj.x;
@@ -234,34 +248,34 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/((int) (Obstacle.zOb+1) - Obstacle.zOb);
 			x1 = LARGEUR*0.5 +(Obstacle.Obj.x - x1);
 			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
-			
+
 			//on trace la ligne
 			buffer.setColor(Color.getHSBColor((float) (i*0.1), 1, 1));
 			buffer.drawLine(((int)(xO)),(int)(yO),(int)(x1),(int) y1);
 		}
-		
+
 		for(int i = (int) (Obstacle.zOb+1); i <= (int) (Obstacle.zOb+501); i++){ //Lignes horizontales
 			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(-10000 -Obstacle.Obj.x)/(i - Obstacle.zOb); //i est la profondeur des lignes
 			yO = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(i - Obstacle.zOb);
 			xO = LARGEUR*0.5 +(Obstacle.Obj.x - xO);
 			yO = HAUTEUR*0.5 + (-Obstacle.Obj.y + yO);
-			
+
 			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(10000 -Obstacle.Obj.x)/(i - Obstacle.zOb);
 			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(i - Obstacle.zOb);
 			x1 = LARGEUR*0.5 +(Obstacle.Obj.x - x1);
 			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
-			
+
 			buffer.setColor(Color.getHSBColor((float) (i*0.01), 1,(float) ((500-i)*0.002)));
 			buffer.drawLine(((int)(xO)),(int)(yO),(int)(x1),(int) y1);
 		}
-		
+
 		//Dessin des polygones
 		int[] ordre = new int[Liste.size()];
 		ordre = Objet.tri(Liste); //voir methode tri dans Objet
 		for(int i = 0; i<= Liste.size() -1 ; i++){ //On parcourt la liste de polygones et les dessine
 			Liste.get(ordre[i]).draw(buffer);
 		}
-		
+
 		//Petit test d'intersection
 		buffer.setColor(Color.BLACK);
 		LinkedList<Point> PtInter = new LinkedList<Point>(); //Liste qui recupere les points d'intersection
@@ -292,12 +306,15 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			buffer.drawString("Ca touche ",(int) (x1), (int) (y1));
 		}
 
+
 		// petits tests pour un HUD
-		Font police = new Font("Courier", Font.BOLD, 30); //mettez any font you like !
+		int score =(int)(temps*0.03);
+
+		Font police = new Font("Courier", Font.BOLD, 24); //mettez any font you like !
 		buffer.setFont(police);
 		buffer.setColor(Color.WHITE);
-		int score =(int)(temps*0.03);
 		buffer.drawString("Score : " + score, 20, (int)HAUTEUR-20);
+		buffer.drawString("Vies : "+ 3, (int)LARGEUR-150, (int)HAUTEUR-20);
 		
 		g.drawImage(ArrierePlan,0,0,this);
 	}
@@ -313,9 +330,9 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				Liste.get(i).move();
 			}
 		}
-		
+
 		// juste pour test un peu de deplacement elementaire
-		Liste.get(0).translate(Math.cos(temps*0.01), 0);
+		Liste.get(0).translate(Math.cos(temps * 0.01), 0);
 		Liste.get(0).rotate(5*Math.cos(temps*0.01), Liste.get(0).points[2]);
 		Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);
 		
@@ -341,7 +358,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		repaint();
 		temps ++;
-		
+
 	}
 
 	@Override
@@ -400,11 +417,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		if(arg0.getKeyChar()=='-'){
-			if(Obstacle.zP<-11){
-				Obstacle.zP +=1;
-			} else {
-				Obstacle.zP=-11;
-			}
+			Obstacle.zP +=1;
 		}
 		if(arg0.getKeyChar()=='+'){
 			Obstacle.zP -=1;
