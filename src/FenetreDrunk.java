@@ -72,7 +72,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		catch(UnsupportedAudioFileException uafe)  {uafe.printStackTrace(); }
 		catch(IOException ioe) { ioe.printStackTrace();}
 
-		//tentative de configuration du son collision
+		//config du son collision "bounce.wav"
 		try{ sonCollision = (Clip) mixer.getLine(dataInfo);}
 		catch(LineUnavailableException lue) { lue.printStackTrace(); }
 		try {
@@ -83,7 +83,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		catch(LineUnavailableException lue) { lue.printStackTrace(); }
 		catch(UnsupportedAudioFileException uafe)  {uafe.printStackTrace(); }
 		catch(IOException ioe) { ioe.printStackTrace();}
-		sonCollision.setLoopPoints(0,32000);
+		sonCollision.setLoopPoints(2000,22000);
 
 		//Place this wherever you want
 		//DESACTIVER CECI POUR ENLEVER LA MUSIQUE  (on mettre un bouton pour mettre en pause le son)
@@ -275,7 +275,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 						PtInter.addAll(Liste.get(i).IntersectList(Liste.get(j))); //On ajoute a la liste d intersections la liste d intersection entre i et j
 						for(int k = 0; k < Liste.get(i).IntersectList(Liste.get(j)).size() ; k++) {
 							ZInter.add(Liste.get(i));
-							sonCollision.start(); // ne joue qu'une fois pour le moment...
+							sonCollision.setFramePosition(0);
+							sonCollision.loop(0);
 						}
 					}
 				}
@@ -400,6 +401,14 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		if(arg0.getKeyChar()=='m'){
 			if(clip.isActive()){clip.stop();}
 			else {clip.start();}
+		}
+		if(arg0.getKeyChar()=='c'){
+			if(sonCollision.isActive()){
+				sonCollision.stop();
+			}else {
+				sonCollision.setFramePosition(0);
+				sonCollision.start();
+			}
 		}
 	}
 
