@@ -45,7 +45,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	
 	//2 objets utiles pour la musique
 	public static Mixer mixer;
-	public static Clip clip;
+	public static Clip clip, sonCollision;
 	
 	public FenetreDrunk(){
 		
@@ -97,25 +97,25 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		
 		/*Creation des polygones*/
-		Point A = new Point(200,00);
-		Point B = new Point(300,000);
+		Point A = new Point(200,0);
+		Point B = new Point(300,0);
 		Point C = new Point(400,600);
 		Point D = new Point(300,600);
-		Point E = new Point(000,300);
+		Point E = new Point(0,300);
 		
 		Point[] tablo = {A,B,C,D,E};
 		Objet Poly1 = new Obstacle(tablo,10,-0.01); //On rentre dans l'objet un tablo de point, un z, et une vitesse dz
 		
-		Point AA = new Point(00,00);
-		Point BB = new Point(100,00);
+		Point AA = new Point(0,0);
+		Point BB = new Point(100,0);
 		Point CC = new Point(100,100);
-		Point DD = new Point(0000,100);
+		Point DD = new Point(0,100);
 		
 		Point[] tabloo = {AA,BB,CC,DD};
 		Obstacle Poly11 = new Obstacle(tabloo,5,0.015);
 		
-		Point A2 = new Point(000,400);
-		Point B2 = new Point(000,600);
+		Point A2 = new Point(0,400);
+		Point B2 = new Point(0,600);
 		Point C2 = new Point(300,600);
 		Point D2 = new Point(300,400);
 		
