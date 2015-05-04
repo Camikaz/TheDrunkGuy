@@ -183,6 +183,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			Liste.add(Maison);
 		}
 
+
 		//fin de la creation des objets
 		
 		//On ajoute des Listener en toute sorte

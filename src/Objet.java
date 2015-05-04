@@ -26,6 +26,10 @@ public abstract class Objet{
 	public static Point Obj = new Point(0, 500); //Objectif pour filmer l image
 	public static double zP = -20; //la profondeur du plan ecran de la camera
 	public static double zOb = -10; //profondeur de l'objectif
+
+
+	public Vector velocity;// The velocity, orientation & angular velocity have to be initialised to 0 and the velocity is the dx for the center of mass.
+	//Why is the velocity only the dx ?
 	
 	
 	
@@ -353,5 +357,6 @@ public abstract class Objet{
 		}
 		return tab;
 	}
+
 	
 }

@@ -3,7 +3,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 
-//Cette classe définit les objets du premier plan qui sont susceptibles de subir des forces, a priori que les membres du drunk guy
+//Cette classe dï¿½finit les objets du premier plan qui sont susceptibles de subir des forces, a priori que les membres du drunk guy
 
 public class Membre extends Objet {
 	
@@ -13,8 +13,6 @@ public class Membre extends Objet {
 	public double mass;
 	public double angularVelocity;
 	public double orientation;
-	public Vector velocity;// The velocity, orientation & angular velocity have to be initialised to 0 and the velocity is the dx for the center of mass.
-	//Why is the velocity only the dx ?
 	public ArrayList<Vector> forces;
 		
 
@@ -50,7 +48,7 @@ public class Membre extends Objet {
 		}
 		
 		for(int j=0;j<npoints;j++) {
-			//J'ai remplacé les i par des j, ça me parait plus logique mais c'est peut etre une erreur ! S. Camille
+			//J'ai remplacï¿½ les i par des j, ï¿½a me parait plus logique mais c'est peut etre une erreur ! S. Camille
 			Cx+=(points[j].x + points[j+1].x)*(points[j].x*points[j+1].y-points[j+1].x*points[j].y)/(6*A);
 			Cy+=(points[j].y + points[j+1].y)*(points[j].x*points[j+1].y-points[j+1].x*points[j].y)/(6*A);
 		}
@@ -60,7 +58,7 @@ public class Membre extends Objet {
 	
 	public Point getCenterOfMass() {
 		if(centerOfMass==null){
-			getCenterOfMass(); //Here there is an infinite loop isn't it ? Cam
+			setCenterOfMass();
 			return centerOfMass;
 		} else {
 			return centerOfMass;
@@ -76,7 +74,7 @@ public class Membre extends Objet {
 		return A*massDensity;
 	}
 	
-	//Les méthodes avec les triangles sont utilisées pour avoir le moment d'inertie du polygone en le décomposant en autant de triangles que le polygone n'a de sommets, on applique huygens pour obtenir le moment d'inertie total
+	//Les mï¿½thodes avec les triangles sont utilisï¿½es pour avoir le moment d'inertie du polygone en le dï¿½composant en autant de triangles que le polygone n'a de sommets, on applique huygens pour obtenir le moment d'inertie total
 	
 	public double triangleInertia(Point A, Point B, Point C) {
 		Vector ba = new Vector(B,A);
@@ -89,8 +87,8 @@ public class Membre extends Objet {
 	}
 	
 	public Point triangleCenterOfMass(Point A, Point B, Point C) {
-		Point[] tab = {A,B,C}; //il faut d'abord créer le tab de point puis instancier l objet (ici le membre) avant sinon erreur de compilation
-		Membre triangle = new Membre(tab, 1); //J'ai transformé "Objet triangle = new Objet(tab); en Membre triangle = new Membre(tab); mais il faut ajouter une masse (jai mis 1 pour l'instant)
+		Point[] tab = {A,B,C}; //il faut d'abord crï¿½er le tab de point puis instancier l objet (ici le membre) avant sinon erreur de compilation
+		Membre triangle = new Membre(tab, 1); //J'ai transformï¿½ "Objet triangle = new Objet(tab); en Membre triangle = new Membre(tab); mais il faut ajouter une masse (jai mis 1 pour l'instant)
 		triangle.setCenterOfMass();
 		return triangle.centerOfMass;
 	}
