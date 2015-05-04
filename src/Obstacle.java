@@ -21,7 +21,7 @@ public class Obstacle extends Objet {
 
 	/**
 	 *
-	 * @param Points
+	 * @param Points tableau de pts
 	 * @param az
 	 * @param adz
 	 */
