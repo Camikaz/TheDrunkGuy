@@ -12,8 +12,8 @@ public class Obstacle extends Objet {
 	public double angularSpeed;
 	
 	
-	/*public Obstacle(Point[] apoints) {
-		super(apoints);
+	/*public Obstacle(Point[] Points) {
+		super(Points);
 		setZ(100);
 		dz = -0.01;
 		actif = false;
@@ -21,12 +21,12 @@ public class Obstacle extends Objet {
 
 	/**
 	 *
-	 * @param apoints
+	 * @param Points
 	 * @param az
 	 * @param adz
 	 */
-	public Obstacle(Point[] apoints, double az, double adz) {
-		super(apoints);
+	public Obstacle(Point[] Points, double az, double adz) {
+		super(Points);
 		vx = 0;
 		vy = 0;
 		angularSpeed = 0;
@@ -36,8 +36,8 @@ public class Obstacle extends Objet {
 		this.limites = lim;
 	}
 
-	public Obstacle(Point[] apoints, double az, double adz, double[] aLim) {
-		super(apoints);
+	public Obstacle(Point[] Points, double az, double adz, double[] aLim) {
+		super(Points);
 		vx = 0;
 		vy = 0;
 		angularSpeed = 0;
@@ -74,21 +74,32 @@ public class Obstacle extends Objet {
 	}
 
 	public Point CenterOfMass() {
-		double A, Cx, Cy;
-		A=0;
-		Cx=0;
-		Cy=0;
-		for(int i=0;i<npoints-1;i++){
-			A+=(points[i].x*points[i+1].y-points[i+1].x*points[i].y)/2;
+		Point resultat = new Point(0,0);
+		int i;
+		for(i=0; i<points.length-1; i++)
+		{
+			resultat.x += (points[i].x+points[i+1].x) * (points[i].x*points[i+1].y - points[i+1].x*points[i].y);
+			resultat.y += (points[i].y+points[i+1].y) * (points[i].x*points[i+1].y - points[i+1].x*points[i].y);
 		}
+		// "i" a la valeur points.length-1 maintenant
+		resultat.x += (points[i].x+points[0].x) * (points[i].x*points[0].y - points[0].x*points[i].y);
+		resultat.y += (points[i].y+points[0].y) * (points[i].x*points[0].y - points[0].x*points[i].y);
 
+		double a = aire();
+		resultat.x /= 6*a;
+		resultat.y /= 6*a;
+		return resultat;
+	}
 
-		for(int j=0;j<npoints-1;j++) {
-			Cx+=(points[j].x + points[j+1].x)*(points[j].x*points[j+1].y-points[j+1].x*points[j].y)/(6*A);
-			Cy+=(points[j].y + points[j+1].y)*(points[j].x*points[j+1].y-points[j+1].x*points[j].y)/(6*A);
-		}
-
-		return new Point(Cx, Cy);
+	public double aire()
+	{
+		double a=0;
+		int i;
+		for(i=0; i<points.length-1; i++)
+			a += points[i].x*points[i+1].y - points[i+1].x*points[i].y;
+		// "i" a la valeur points.length-1 maintenant
+		a += points[i].x*points[0].y - points[0].x*points[i].y;
+		return 0.5*a;
 	}
 
 	@Override
