@@ -48,7 +48,9 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	
 	public FenetreDrunk(){
 		
-		//Tout ceci sert � configurer le son
+		if(MenuJeu.sound){
+			
+			//Tout ceci sert � configurer le son
 		Mixer.Info[] mixInfos = AudioSystem.getMixerInfo();
 		
 		mixer = AudioSystem.getMixer(mixInfos[0]); //ok you got it
@@ -82,6 +84,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		//Place this wherever you want - Appuyer sur M pour arrêter la musique
 		clip.start(); //or c lip.loop(0); clip.loop(LOOP_CONTINUOUSLY);
 		//Fin de la configuration du son
+		}
 		
 		//Initialisation de la fenetre
 		setSize((int)LARGEUR+this.getInsets().left + this.getInsets().right,(int)HAUTEUR+this.getInsets().top + this.getInsets().bottom);
@@ -288,8 +291,10 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 						PtInter.addAll(Liste.get(i).IntersectList(Liste.get(j))); //On ajoute a la liste d intersections la liste d intersection entre i et j
 						for(int k = 0; k < Liste.get(i).IntersectList(Liste.get(j)).size() ; k++) {
 							ZInter.add(Liste.get(i));
-							sonCollision.setFramePosition(0); //douce mélodie (qui joue pas toujours)
-							sonCollision.loop(0);
+							if(MenuJeu.sound){
+								sonCollision.setFramePosition(0); //douce mélodie (qui joue pas toujours)
+								sonCollision.loop(0);
+							}
 						}
 					}
 				}
