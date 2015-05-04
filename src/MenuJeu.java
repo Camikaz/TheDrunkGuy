@@ -9,9 +9,11 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
-public class MenuJeu extends JFrame {
+public class MenuJeu extends JFrame implements ActionListener{
 	
 	public String player_name = "Player 1";
 	public String PLAY = "PLAY";
@@ -33,16 +35,18 @@ public class MenuJeu extends JFrame {
 		label.setFont(new Font("BlackBoard", Font.BOLD, 70));
 		
 		play = new JButton(PLAY);
+		play.addActionListener(this);
 		
 			JPanel title = new JPanel(); //titre
-		    title.setBackground(Color.WHITE);
 		    title.setPreferredSize(new Dimension(1000, 200));
 		    title.add(label);
 		    
 		    JPanel jouer = new JPanel(); // contient le jbutton play
 		    jouer.setBackground(Color.PINK);
 		    jouer.setPreferredSize(new Dimension(1000, 100));
+		    jouer.add(play);
 		    
+		   
 		    JPanel highscore = new JPanel();
 		    highscore.setBackground(Color.YELLOW);
 		    highscore.setPreferredSize(new Dimension(500, 300 ));
@@ -60,7 +64,7 @@ public class MenuJeu extends JFrame {
 		    
 		    //Le conteneur principal
 		    pan.setPreferredSize(new Dimension(1000, 700));
-		    pan.setBackground(Color.LIGHT_GRAY);
+		    pan.setBackground(Color.MAGENTA);
 		    //On définit le layout manager
 		    pan.setLayout(new GridBagLayout());
 		    
@@ -120,6 +124,15 @@ public class MenuJeu extends JFrame {
 		    this.setContentPane(pan);
 		    this.setVisible(true);
 		    
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == play){
+			this.setVisible(false);
+			new FenetreDrunk();
+		}
+		
 	}
 
 }
