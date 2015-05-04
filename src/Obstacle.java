@@ -19,7 +19,12 @@ public class Obstacle extends Objet {
 		actif = false;
 	}*/
 
-	//Constructeur avec z et dz
+	/**
+	 *
+	 * @param apoints
+	 * @param az
+	 * @param adz
+	 */
 	public Obstacle(Point[] apoints, double az, double adz) {
 		super(apoints);
 		vx = 0;
@@ -29,6 +34,16 @@ public class Obstacle extends Objet {
 		setDz(adz);
 		double[] lim =  {-10000,10000,0,7000,-9,10000};
 		this.limites = lim;
+	}
+
+	public Obstacle(Point[] apoints, double az, double adz, double[] aLim) {
+		super(apoints);
+		vx = 0;
+		vy = 0;
+		angularSpeed = 0;
+		setZ(az);
+		setDz(adz);
+		limites = aLim;
 	}
 
 
@@ -63,11 +78,12 @@ public class Obstacle extends Objet {
 		A=0;
 		Cx=0;
 		Cy=0;
-		for(int i=0;i<npoints;i++){
+		for(int i=0;i<npoints-1;i++){
 			A+=(points[i].x*points[i+1].y-points[i+1].x*points[i].y)/2;
 		}
 
-		for(int j=0;j<npoints;j++) {
+
+		for(int j=0;j<npoints-1;j++) {
 			Cx+=(points[j].x + points[j+1].x)*(points[j].x*points[j+1].y-points[j+1].x*points[j].y)/(6*A);
 			Cy+=(points[j].y + points[j+1].y)*(points[j].x*points[j+1].y-points[j+1].x*points[j].y)/(6*A);
 		}

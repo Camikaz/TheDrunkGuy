@@ -183,6 +183,20 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			Liste.add(Maison);
 		}
 
+		// voiture
+		double[] limvoiture = {-3000,3000, 0, 1000, 0,10000};
+		A = new Point(-3000,0);
+		B = new Point(-3000,500);
+		C = new Point(-2000,500);
+		D = new Point(-2000,0);
+		Point[] tabvoiture = {A,B,C,D};
+		Obstacle Voiture = new Obstacle(tabvoiture,300,0,limvoiture);
+		Voiture.vx = 5;
+		Voiture.vy = 20;
+		Voiture.angularSpeed = 5;
+		Liste.add(Voiture);
+
+
 
 		//fin de la creation des objets
 		
