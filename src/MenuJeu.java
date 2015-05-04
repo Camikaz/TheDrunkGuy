@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -9,12 +10,16 @@ import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 
 public class MenuJeu extends JFrame implements ActionListener{
@@ -26,7 +31,9 @@ public class MenuJeu extends JFrame implements ActionListener{
 	public JCheckBox musicbox = new JCheckBox("Soundtrack is ON", true);
 	public JTextField player = new JTextField("Enter Player's Name...");
 	public JSlider difficulty = new JSlider(0,30,10);
-	public boolean sound = true;
+	public static boolean sound = true;
+	public int dizzyness;
+	public Image img;
 	
 	public MenuJeu(){
 		
@@ -35,7 +42,7 @@ public class MenuJeu extends JFrame implements ActionListener{
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		this.setTitle("Main menu : Welcome " +player_name);
-		this.setResizable(false);
+		this.setResizable(true);
 		
 		JPanel pan = new JPanel();
 		
@@ -79,17 +86,16 @@ public class MenuJeu extends JFrame implements ActionListener{
 		    Settings.add(difficulty);
 		    
 		    JPanel espace1 = new JPanel();
-		    espace1.setBackground(Color.RED);
 		    espace1.setPreferredSize(new Dimension(1000, 50));
 		    JPanel espace2 = new JPanel();
-		    espace2.setBackground(Color.GREEN);
 		    espace2.setPreferredSize(new Dimension(1000, 50));
 		    
 		    //Le conteneur principal
 		    pan.setPreferredSize(new Dimension(1000, 700));
-		    pan.setBackground(Color.WHITE);
+
 		    //On définit le layout manager
 		    pan.setLayout(new GridBagLayout());
+		    pan.setBackground(Color.WHITE);
 		    
 		    //L'objet servant à positionner les composants
 		    GridBagConstraints gbc = new GridBagConstraints();
@@ -104,24 +110,28 @@ public class MenuJeu extends JFrame implements ActionListener{
 		    //On positionne la case de départ du composant ici le titre
 		    gbc.gridx = 0;
 		    gbc.gridy = 0;
+		    pan.add(espace1, gbc);
+		    
+		    gbc.gridx = 0;
+		    gbc.gridy = 1;
 		    pan.add(title, gbc);
 		    
 		    //---------------------------------------------
 		    gbc.gridx = 0;
-		    gbc.gridy = 1;
+		    gbc.gridy = 2;
 		    gbc.weighty = 0.2;
 		    
 		    pan.add(espace1, gbc);
 		    //---------------------------------------------
 		    gbc.gridx = 0;
-		    gbc.gridy =2;
+		    gbc.gridy =3;
 		    gbc.weighty = 0.6;
 		    
 		    pan.add(jouer, gbc);        
 		    //---------------------------------------------
 		    //Cette instruction informe le layout que c'est une fin de ligne
 		    gbc.gridx = 0;
-		    gbc.gridy = 3;
+		    gbc.gridy = 4;
 		    gbc.weighty = 0.2;
 		    pan.add(espace2, gbc);
 		    
@@ -129,7 +139,7 @@ public class MenuJeu extends JFrame implements ActionListener{
 		    gbc.gridwidth = 1;
 		    gbc.gridheight = GridBagConstraints.REMAINDER;
 		    gbc.gridx = 0;
-		    gbc.gridy = 4;
+		    gbc.gridy = 5;
 		    gbc.weighty = 1.0;
 		    pan.add(highscore, gbc);
 		    
@@ -137,7 +147,7 @@ public class MenuJeu extends JFrame implements ActionListener{
 		    gbc.gridwidth = GridBagConstraints.REMAINDER;
 		    gbc.gridheight = GridBagConstraints.REMAINDER;
 		    gbc.gridx = GridBagConstraints.RELATIVE;
-		    gbc.gridy = 4;
+		    gbc.gridy = 5;
 		    gbc.weighty = 1.0;
 		    pan.add(Settings, gbc);
 		    
