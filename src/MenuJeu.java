@@ -1,7 +1,10 @@
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -20,6 +23,10 @@ public class MenuJeu extends JFrame implements ActionListener{
 	public String PLAY = "PLAY";
 	public JButton play;
 	public JLabel label;
+	public JCheckBox musicbox = new JCheckBox("Soundtrack is ON", true);
+	public JTextField player = new JTextField("Enter Player's Name...");
+	public JSlider difficulty = new JSlider(0,30,10);
+	public boolean sound = true;
 	
 	public MenuJeu(){
 		
@@ -34,7 +41,6 @@ public class MenuJeu extends JFrame implements ActionListener{
 		
 		label = new JLabel("The Drunken Mile");
 		label.setFont(new Font("BlackBoard", Font.BOLD, 70));
-		
 		play = new JButton(PLAY);
 		play.setFont(new Font("BlackBoard", Font.BOLD, 50));
 		play.addActionListener(this);
@@ -59,6 +65,18 @@ public class MenuJeu extends JFrame implements ActionListener{
 		    JPanel Settings = new JPanel();
 		    Settings.setBackground(Color.BLACK);
 		    Settings.setPreferredSize(new Dimension(500, 300));
+		    Settings.setLayout(new GridLayout(4,2));
+		    
+		    // parametres modifiables dans le menu
+		    
+		    musicbox.addActionListener(this);
+		    String settxt = "                       SETTINGS";
+		    
+		    player.addActionListener(this);
+		    Settings.add(new JLabel(settxt)).setFont(new Font("Serif", Font.BOLD, 30));
+		    Settings.add(musicbox);
+		    Settings.add(player);
+		    Settings.add(difficulty);
 		    
 		    JPanel espace1 = new JPanel();
 		    espace1.setBackground(Color.RED);
@@ -69,7 +87,7 @@ public class MenuJeu extends JFrame implements ActionListener{
 		    
 		    //Le conteneur principal
 		    pan.setPreferredSize(new Dimension(1000, 700));
-		    pan.setBackground(Color.MAGENTA);
+		    pan.setBackground(Color.WHITE);
 		    //On définit le layout manager
 		    pan.setLayout(new GridBagLayout());
 		    
@@ -137,6 +155,20 @@ public class MenuJeu extends JFrame implements ActionListener{
 			
 			new FenetreDrunk();
 			this.dispose();
+		}
+		
+		if(e.getSource() == player){
+			player_name = player.getText();
+			this.setTitle("Main menu : Welcome "+player_name);
+		}
+		
+		if(e.getSource() == musicbox){
+			sound = !sound;
+			if(sound){
+				musicbox.setText("Soundtrack is ON ");
+			} else{
+				musicbox.setText("Soundtrack is OFF ");
+			}
 		}
 		
 	}
