@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -35,6 +36,7 @@ public class MenuJeu extends JFrame implements ActionListener{
 		label.setFont(new Font("BlackBoard", Font.BOLD, 70));
 		
 		play = new JButton(PLAY);
+		play.setFont(new Font("BlackBoard", Font.BOLD, 50));
 		play.addActionListener(this);
 		
 			JPanel title = new JPanel(); //titre
@@ -44,7 +46,10 @@ public class MenuJeu extends JFrame implements ActionListener{
 		    JPanel jouer = new JPanel(); // contient le jbutton play
 		    jouer.setBackground(Color.PINK);
 		    jouer.setPreferredSize(new Dimension(1000, 100));
+		    jouer.setLayout(new GridLayout(1,3));
+		    jouer.add(new JPanel());
 		    jouer.add(play);
+		    jouer.add(new JPanel());
 		    
 		   
 		    JPanel highscore = new JPanel();
@@ -129,8 +134,9 @@ public class MenuJeu extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == play){
-			this.setVisible(false);
+			
 			new FenetreDrunk();
+			this.dispose();
 		}
 		
 	}
