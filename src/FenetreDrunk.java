@@ -132,8 +132,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Obstacle Poly3 = new Obstacle(tablo3,5,0.02);
 		
 		Point A4 = new Point(-300,300);
-		Point B4 = new Point(-300,-300);
-		Point C4 = new Point(-100,-200);
+		Point B4 = new Point(-300,000);
+		Point C4 = new Point(-100,000);
 		Point D4 = new Point(-100,300);
 		
 		Point[] tablo4 = {A4,B4,C4,D4};
@@ -321,18 +321,15 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste.get(0).rotate(5*Math.cos(temps*0.01), Liste.get(0).points[2]);
 		Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);
 		
-		//Simule le point de vue du marcheur qui oscille
+		
+		//Camera qui bouge
+		
+		if (Obstacle.Obj.y +  0.1*(HAUTEUR*0.5 - soury) -10 >=0){
+		Obstacle.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
+		Obstacle.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
+		
 		Obstacle.Obj.x += 10*Math.cos(temps*0.1);
 		Obstacle.Obj.y += -20*Math.sin(temps*0.2);
-		
-		//Pour bouger avec la souris - limité à y€[50,7000]
-		Obstacle.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
-		if(Obstacle.Obj.y >=50 && Obstacle.Obj.y<=7000){
-			Obstacle.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
-		} else if (Obstacle.Obj.y <50){
-			Obstacle.Obj.y = 50;
-		} else if (Obstacle.Obj.y>7000 ){
-			Obstacle.Obj.y = 7000;
 		}
 		
 		//Pour que la camera avance (provoque des glitchs car j'ai jamais g�r� le cas ou zObjet = zObjectif
