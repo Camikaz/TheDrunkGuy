@@ -29,6 +29,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	private Timer timer;
 	private LinkedList<Objet> Liste; //La Liste de tout les objets a afficher
 	
+	private boolean admin = false;
+	
 	private Graphics buffer; //On dessine la dedans, vous connaissez le principe d'un buffer
 	private BufferedImage ArrierePlan;
 	
@@ -103,7 +105,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Point E = new Point(0,300);
 		
 		Point[] tablo = {A,B,C,D,E};
-		Objet Poly1 = new Obstacle(tablo,10,-0.01); //On rentre dans l'objet un tablo de point, un z, et une vitesse dz
+		Objet Poly1 = new Obstacle(tablo,10,0.7); //On rentre dans l'objet un tablo de point, un z, et une vitesse dz
 		
 		Point AA = new Point(0,0);
 		Point BB = new Point(100,0);
@@ -208,45 +210,47 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		// affichage des lignes du sol
 		
 		//Le fond
-		buffer.setColor(Color.GRAY);
+		buffer.setColor(Color.PINK);
 		buffer.fillRect(0, 0, this.getWidth(), this.getHeight());
 				
 		//ces variables vont nous servir pour toutes les lignes
-		double xO,yO,x1,y1;
+		Point A,B;
+		//Dessin de l'horizon
+		A = new Point(-100000000,0,10000);
+		B = new Point(100000000,0,10000);
+		A = Geo.perspectiveP(A);
+		B = Geo.perspectiveP(B);
 		
-		//Dessin de l'horizon en fonction de l objectif
 		buffer.setColor(Color.white);
-		xO = FenetreDrunk.LARGEUR*0.5 - Obstacle.Obj.x;
-		yO = FenetreDrunk.HAUTEUR*0.5 + Obstacle.Obj.y;
-		buffer.drawLine(0,((int)(yO)),this.getWidth(), (int)(yO));
+		buffer.drawLine((int) A.x,((int)A.y),(int) B.x,(int) B.y);
 		
 		
 		//pour tous �a il faut comprendre comment j ai fait la perspective : un point sera dessine en projetant son x et
 		// son y sur un plan en passant par l objectif, on s y perd je l avoue mais j ai le truc en tete
-		Point A,B;
 		for(int i = -100; i <= 100; i++){ //Lignes de fuites
 			//1er point
 			A = new Point(100*i,0);
-			A = Objet.perspectiveP(A,10000);
+			A = Geo.perspectiveP(A,10000);
 			
 			//idem pour le 2eme point
 			B = new Point(100*i,0);
-			B = Objet.perspectiveP(B,(int) Obstacle.zOb+1);
+			B = Geo.perspectiveP(B,(int) (Geo.Obj.z+2));
 			
 			//on trace la ligne
 			buffer.setColor(Color.getHSBColor((float) (i*0.1), 1, 1));
 			buffer.drawLine(((int)A.x),(int)A.y,(int)B.x,(int) B.y);
 		}
 		
-		for(int i = (int) (Obstacle.zOb+1); i <= (int) (Obstacle.zOb+501); i++){ //Lignes horizontales
+		for(int i = 0; i <= 1000; i +=10){ //Lignes horizontales
 			//1er point
+			double z = Geo.Obj.z+11 - (Geo.Obj.z%10);
 			A = new Point(-10000,0);
-			A = Objet.perspectiveP(A,i);
+			A = Geo.perspectiveP(A, z + i);
 			//idem pour le 2eme point
 			B = new Point(10000,0);
-			B = Objet.perspectiveP(B,i);
+			B = Geo.perspectiveP(B, z + i);
 			
-			buffer.setColor(Color.getHSBColor((float) (i*0.01), 1,(float) ((500-i)*0.002)));
+			buffer.setColor(Color.getHSBColor((float) ((z+i)*0.001), 1,0.8f));
 			buffer.drawLine(((int)A.x),(int)A.y,(int)B.x,(int) B.y);
 		}
 		
@@ -263,7 +267,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		LinkedList<Objet> ZInter = new LinkedList<Objet>(); //liste qui recupere les objet associes a ces intersection (oui c est un peu con mais j ai rien trouve de mieux pour avoir le z de l intersection !)
 		for(int i = 0; i<= Liste.size()-1; i++){
 			for(int j = i ; j <= Liste.size()-1 ; j++){
-				if((i!=j)&&(Liste.get(i).z>Obstacle.zOb)&&(Liste.get(j).z>Obstacle.zOb)){ // on evite l intersection avec soi meme
+				if((i!=j)&&(Liste.get(i).z>Geo.Obj.z)&&(Liste.get(j).z>Geo.Obj.z)){ // on evite l intersection avec soi meme
 					if(Liste.get(i).Intersect(Liste.get(j)) ){
 						PtInter.addAll(Liste.get(i).IntersectList(Liste.get(j))); //On ajoute a la liste d intersections la liste d intersection entre i et j
 						for(int k = 0; k < Liste.get(i).IntersectList(Liste.get(j)).size() ; k++) {
@@ -281,7 +285,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		for(int l = 0 ; l <= PtInter.size()-1 ; l++){
 			//Calcul de la position a l ecran des pt d'intersection pour ecrire "�a touche'
 			Point A1 = new Point(PtInter.get(l).x,PtInter.get(l).y);
-			A1 = Objet.perspectiveP(A1, ZInter.get(1).z);
+			A1 = Geo.perspectiveP(A1, ZInter.get(1).z);
 			buffer.drawString("Ca touche ",(int) A1.x, (int) A1.y);
 		}
 
@@ -317,18 +321,21 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//Camera qui bouge
 		
-		if (Obstacle.Obj.y +  0.1*(HAUTEUR*0.5 - soury) -10 >=0){
-		Obstacle.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
-		Obstacle.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
-		
-		Obstacle.Obj.x += 10*Math.cos(temps*0.1);
-		Obstacle.Obj.y += -20*Math.sin(temps*0.2);
+		if (Geo.Obj.y +  0.1*(HAUTEUR*0.5 - soury) >=0){
+			if(admin){
+				Geo.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
+				Geo.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
+			}
+			else{
+				Geo.Obj.x += 10*Math.cos(temps*0.1);
+				Geo.Obj.y += -20*Math.sin(temps*0.2);
+			}
 		}
 		
-		//Pour que la camera avance (provoque des glitchs car j'ai jamais g�r� le cas ou zObjet = zObjectif
-		/*
-		Obstacle.zOb+=0.1;
-		Obstacle.zP+=0.1;*/
+		//Pour que la camera avance (provoque des glitchs car j'ai jamais gere le cas ou zObjet = zObjectif
+		
+		Geo.Obj.z+=1;
+		Geo.zP+=1;
 		
 		
 		repaint();
@@ -392,19 +399,26 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		if(arg0.getKeyChar()=='-'){
-			if(Obstacle.zP<Obstacle.zOb-1){
-				Obstacle.zP +=1;
+			if(Geo.zP<Geo.Obj.z-1){
+				Geo.zP +=1;
 			} else {
-				Obstacle.zP=Obstacle.zOb -1;
+				Geo.zP=Geo.Obj.z -1;
 			}
 		}
 		if(arg0.getKeyChar()=='+'){
-			Obstacle.zP -=1;
+			Geo.zP -=1;
 		}
 		if(arg0.getKeyChar()=='m'){
 			if(clip.isActive()){clip.stop();}
 			else {clip.start();}
 		}
+		
+		if(arg0.getKeyChar()=='a'){
+			if(admin){admin = false;}
+			else {admin = true;}
+		}
+		
+		
 	}
 
 }

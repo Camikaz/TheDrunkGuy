@@ -32,9 +32,9 @@ public class Obstacle extends Objet {
 	
 	public void setZ(double az){
 		this.z = az;
-		
-		if( ((az<-9)||(az>100)) && (az*this.getDz()>0) ){
-			this.setDz(-this.getDz());
+
+		for(int i = 0; i< this.npoints; i++){
+			this.points[i].z = az;
 		}
 		
 	}	
@@ -52,9 +52,9 @@ public class Obstacle extends Objet {
 			
 			this.points[i].x += this.points[i].dx;
 			this.points[i].y += this.points[i].dy;
-			
-			this.setZ(this.getZ() + this.getDz());
 		}
+
+		this.setZ(this.getZ() + this.getDz());
 	}
 	
 }

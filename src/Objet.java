@@ -7,6 +7,8 @@ import java.util.LinkedList;
  *  et peut etre aussi les obstacles quand ils seront au premier plan.
  *  
  *  Cette classe est abstraite et ses filles sont Membre et Obstacle
+ *  
+ *  Seulement pour les objets de types polygones plat a z constant
  */
  
 
@@ -21,20 +23,12 @@ public abstract class Objet{
 	protected double z; //profondeur : z positif: devant, z negatif : derriere
 	protected double dz;
 	
-
-	
-	public static Point Obj = new Point(0, 500); //Objectif pour filmer l image
-	public static double zP = -20; //la profondeur du plan ecran de la camera
-	public static double zOb = -10; //profondeur de l'objectif
-	
-	
 	
 	//Constructeur avec un tab de points 
 	public Objet(Point[] apoints){
 		points = apoints;
 		npoints = apoints.length;
 	}
-	
 	
 	//constructeur avec deux tableaux de double designant les positions X et Y de chaque points
 	public Objet(double[] tabX, double[] tabY){ 
@@ -281,37 +275,14 @@ public abstract class Objet{
 	}
 	
 	
-	//Renvoie le point correspondant au dessin sur le plan du point d'entrée a une profondeur Z
-	public static Point perspectiveP(Point P, double z){
-		double xp, yp;
-		xp = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(P.x-Obstacle.Obj.x)/(z - Obstacle.zOb); //(Obstacle.zP - Obstacle.zOb) est la difference de z entre le plan et l Obstacle.Objectif
-		yp = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(P.y-Obstacle.Obj.y)/(z - Obstacle.zOb);
-		
-		//on affiche le new point en centrant l'écran sur le point objectif
-		xp = FenetreDrunk.LARGEUR*0.5 +(Obstacle.Obj.x - xp);
-		yp = FenetreDrunk.HAUTEUR*0.5 + (-Obstacle.Obj.y + yp);
-		
-		return new Point(xp,yp);
-	
-	}
-	
-	//Ceci renvoie le tableau des points correspondant a ce qu on affiche a l ecran (ces points dependents de la position de la camera)
-	public Point[] perspective (){
-		Point[] tab = new Point[this.npoints];
-		for(int i =0 ; i < this.npoints ; i++){
-			tab[i] = perspectiveP(this.points[i],this.z);
-		}
-		return tab;
-	}
-	
 	
 	//Pour dessiner n importe quel objet
 	public void draw(Graphics buffer) {
-		if(this.z > Obstacle.zOb){ // on dessine seulement si l'objet est devant la camera
+		if(this.z > Geo.Obj.z){ // on dessine seulement si l'objet est devant la camera
 			//reglage de la couleur variante
 			buffer.setColor(Color.getHSBColor((float)( 0.5 + 0.5*Math.cos(this.z*0.01)), 0.7f, 1));
 			
-			Point[] tab = this.perspective();
+			Point[] tab = Geo.perspective(this.points);
 			
 			//La methode fillPolygon demande des tableau de x et de y :
 			int[] tabY = new int[tab.length];
