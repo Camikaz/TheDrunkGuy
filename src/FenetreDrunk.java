@@ -223,36 +223,31 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//pour tous �a il faut comprendre comment j ai fait la perspective : un point sera dessine en projetant son x et
 		// son y sur un plan en passant par l objectif, on s y perd je l avoue mais j ai le truc en tete
+		Point A,B;
 		for(int i = -100; i <= 100; i++){ //Lignes de fuites
-			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(100*i -Obstacle.Obj.x)/(10000 - Obstacle.zOb); //xO devient le x de la projection sur le plan de la camera
-			yO = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(10000 - Obstacle.zOb); //yO devient le y de la projection sur le plan de la camera
-			xO = LARGEUR*0.5 +(Obstacle.Obj.x - xO); //On prend la difference entre le xO calcule et le x de l objectif pour avoir une image centre au m�me endroit que l objectif
-			yO = HAUTEUR*0.5 + (-Obstacle.Obj.y + yO); //idem pour y
+			//1er point
+			A = new Point(100*i,0);
+			A = Objet.perspectiveP(A,10000);
 			
 			//idem pour le 2eme point
-			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(100*i -Obstacle.Obj.x)/((int) (Obstacle.zOb+1) - Obstacle.zOb);
-			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/((int) (Obstacle.zOb+1) - Obstacle.zOb);
-			x1 = LARGEUR*0.5 +(Obstacle.Obj.x - x1);
-			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
+			B = new Point(100*i,0);
+			B = Objet.perspectiveP(B,(int) Obstacle.zOb+1);
 			
 			//on trace la ligne
 			buffer.setColor(Color.getHSBColor((float) (i*0.1), 1, 1));
-			buffer.drawLine(((int)(xO)),(int)(yO),(int)(x1),(int) y1);
+			buffer.drawLine(((int)A.x),(int)A.y,(int)B.x,(int) B.y);
 		}
 		
 		for(int i = (int) (Obstacle.zOb+1); i <= (int) (Obstacle.zOb+501); i++){ //Lignes horizontales
-			xO = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(-10000 -Obstacle.Obj.x)/(i - Obstacle.zOb); //i est la profondeur des lignes
-			yO = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(i - Obstacle.zOb);
-			xO = LARGEUR*0.5 +(Obstacle.Obj.x - xO);
-			yO = HAUTEUR*0.5 + (-Obstacle.Obj.y + yO);
-			
-			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(10000 -Obstacle.Obj.x)/(i - Obstacle.zOb);
-			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(0-Obstacle.Obj.y)/(i - Obstacle.zOb);
-			x1 = LARGEUR*0.5 +(Obstacle.Obj.x - x1);
-			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
+			//1er point
+			A = new Point(-10000,0);
+			A = Objet.perspectiveP(A,i);
+			//idem pour le 2eme point
+			B = new Point(10000,0);
+			B = Objet.perspectiveP(B,i);
 			
 			buffer.setColor(Color.getHSBColor((float) (i*0.01), 1,(float) ((500-i)*0.002)));
-			buffer.drawLine(((int)(xO)),(int)(yO),(int)(x1),(int) y1);
+			buffer.drawLine(((int)A.x),(int)A.y,(int)B.x,(int) B.y);
 		}
 		
 		//Dessin des polygones
@@ -285,11 +280,9 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		for(int l = 0 ; l <= PtInter.size()-1 ; l++){
 			//Calcul de la position a l ecran des pt d'intersection pour ecrire "�a touche'
-			x1 = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(PtInter.get(l).x -Obstacle.Obj.x)/(ZInter.get(l).z - Obstacle.zOb);
-			y1 = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(PtInter.get(l).y-Obstacle.Obj.y)/(ZInter.get(l).z - Obstacle.zOb);
-			x1 = LARGEUR*0.5 +(Obstacle.Obj.x - x1);
-			y1 = HAUTEUR*0.5 + (-Obstacle.Obj.y + y1);
-			buffer.drawString("Ca touche ",(int) (x1), (int) (y1));
+			Point A1 = new Point(PtInter.get(l).x,PtInter.get(l).y);
+			A1 = Objet.perspectiveP(A1, ZInter.get(1).z);
+			buffer.drawString("Ca touche ",(int) A1.x, (int) A1.y);
 		}
 
 		// petits tests pour un HUD - on ajoutera du texte en fct de l'évolution du jeu :)

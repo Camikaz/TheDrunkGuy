@@ -45,9 +45,8 @@ public abstract class Objet{
 		}
 	}
 	
-	// Pourquoi la mï¿½thode est abstraite si la classe l'est dï¿½jï¿½? Je la mets en commentaire en attendant - Reda
+	// Pourquoi la mï¿½thode est abstraite si la classe l'est deja? - Reda
 	public abstract void move();
-	
 	//la methode est abstraite, cela signifie que chaque classes filles devra avoir sa classe move, et donc son propre deplacement
 	//Si tu veux, on peut faire un mouvement standard avec une classe non abstraite et completer ce mouvement dans chaque fille mais c'est pas tres interessant
 
@@ -281,18 +280,26 @@ public abstract class Objet{
 		return null;
 	}
 	
+	
+	//Renvoie le point correspondant au dessin sur le plan du point d'entrée a une profondeur Z
+	public static Point perspectiveP(Point P, double z){
+		double xp, yp;
+		xp = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(P.x-Obstacle.Obj.x)/(z - Obstacle.zOb); //(Obstacle.zP - Obstacle.zOb) est la difference de z entre le plan et l Obstacle.Objectif
+		yp = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(P.y-Obstacle.Obj.y)/(z - Obstacle.zOb);
+		
+		//on affiche le new point en centrant l'écran sur le point objectif
+		xp = FenetreDrunk.LARGEUR*0.5 +(Obstacle.Obj.x - xp);
+		yp = FenetreDrunk.HAUTEUR*0.5 + (-Obstacle.Obj.y + yp);
+		
+		return new Point(xp,yp);
+	
+	}
+	
 	//Ceci renvoie le tableau des points correspondant a ce qu on affiche a l ecran (ces points dependents de la position de la camera)
 	public Point[] perspective (){
 		Point[] tab = new Point[this.npoints];
-		double xp, yp;
 		for(int i =0 ; i < this.npoints ; i++){
-			
-			xp = Obstacle.Obj.x + (Obstacle.zP - Obstacle.zOb)*(this.points[i].x-Obstacle.Obj.x)/(this.z - Obstacle.zOb); //(Obstacle.zP - Obstacle.zOb) est la difference de z entre le plan et l Obstacle.Objectif
-			yp = Obstacle.Obj.y + (Obstacle.zP - Obstacle.zOb)*(this.points[i].y-Obstacle.Obj.y)/(this.z - Obstacle.zOb);
-			
-			xp = FenetreDrunk.LARGEUR*0.5 +(Obstacle.Obj.x - xp);
-			yp = FenetreDrunk.HAUTEUR*0.5 + (-Obstacle.Obj.y + yp);
-			tab[i] = new Point(xp,yp);
+			tab[i] = perspectiveP(this.points[i],this.z);
 		}
 		return tab;
 	}
