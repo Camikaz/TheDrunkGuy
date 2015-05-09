@@ -37,6 +37,7 @@ public class MenuJeu extends JFrame implements ActionListener{
 	
 	public MenuJeu(){
 		
+		
 		this.setSize(1000,700);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
