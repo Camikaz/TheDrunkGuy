@@ -22,7 +22,6 @@ public abstract class Objet{
 	protected double dz;
 	
 
-	
 	public static Point Obj = new Point(0, 500); //Objectif pour filmer l image
 	public static double zP = -20; //la profondeur du plan ecran de la camera
 	public static double zOb = -10; //profondeur de l'objectif
