@@ -95,7 +95,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		setVisible(true);
 		setTitle("Drunk Guy");
 		
-		
 		//Declaration de la liste des objets
 		Liste = new LinkedList<Objet>();
 		
@@ -163,7 +162,20 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		//Des maisons
 		for(int i = 0; i< 100 ; i++){
 			double positionLaterale = 10000*Math.random();
-			//System.out.println(positionLaterale);
+			A = new Point(positionLaterale-500,0);
+			B = new Point(positionLaterale+500,0);
+			C = new Point(positionLaterale+500,2000);
+			D = new Point(positionLaterale,2500);
+			E = new Point(positionLaterale-500,2000);
+			Point[] tabloCo = {A,B,C,D,E};
+			Obstacle Maison = new Obstacle(tabloCo, i*25 , 0);
+            //Maison.angularSpeed = 10*Math.sin(0.01*i); //vitesse angulaire random, juste pour le fun
+			Liste.add(Maison);
+		}
+		
+		//Encore des maisons
+		for(int i = 0; i< 100 ; i++){
+			double positionLaterale = -10000*Math.random();
 			A = new Point(positionLaterale-500,0);
 			B = new Point(positionLaterale+500,0);
 			C = new Point(positionLaterale+500,2000);
@@ -174,19 +186,18 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			Liste.add(Maison);
 		}
 		
-		//Encore des maisons
-		for(int i = 0; i< 100 ; i++){
-			double positionLaterale = -10000*Math.random();
-			//System.out.println(positionLaterale);
-			A = new Point(positionLaterale-500,0);
-			B = new Point(positionLaterale+500,0);
-			C = new Point(positionLaterale+500,2000);
-			D = new Point(positionLaterale,2500);
-			E = new Point(positionLaterale-500,2000);
-			Point[] tabloCo = {A,B,C,D,E};
-			Objet Maison = new Obstacle(tabloCo, i*25 , 0);
-			Liste.add(Maison);
-		}
+		// voiture
+        double[] limvoiture = {-3000,3000, 0, 1000, 0,10000};
+        A = new Point(-3000,0);
+        B = new Point(-3000,500);
+        C = new Point(-2000,500);
+        D = new Point(-2000,0);
+        Point[] tabvoiture = {A,B,C,D};
+        Obstacle Voiture = new Obstacle(tabvoiture,300,0,limvoiture);
+        Voiture.vx = 5;
+        Voiture.vy = 20;
+        Voiture.angularSpeed = 5;
+        Liste.add(Voiture);
 
 		//fin de la creation des objets
 		
@@ -194,6 +205,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addKeyListener(this);
+		
+		
 		
 		//Initialisation du timer
 		timer = new Timer(30,this);
@@ -339,8 +352,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//Pour que la camera avance (provoque des glitchs car j'ai jamais gere le cas ou zObjet = zObjectif
 		
-		Geo.Obj.z+=1;
-		Geo.zP+=1;
+		//Geo.Obj.z+=1;
+		//Geo.zP+=1;
 		
 		
 		repaint();
