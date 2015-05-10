@@ -1,2 +1,5 @@
-highscore data.
-line2
+HIGHSCORES
+Alestair 69
+Camille 54
+Soafara 24
+Reda 11

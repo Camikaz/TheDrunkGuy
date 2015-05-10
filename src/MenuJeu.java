@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -20,6 +18,7 @@ public class MenuJeu extends JFrame implements ActionListener{
 	public String PLAY = "PLAY";
 	public JButton play;
 	public JLabel label;
+	public JLabel text_file;
 	public JCheckBox musicbox = new JCheckBox("Soundtrack is ON", true);
 	public JTextField player = new JTextField("Enter Player's Name...");
 	public JSlider difficulty = new JSlider(0,30,10);
@@ -49,11 +48,12 @@ public class MenuJeu extends JFrame implements ActionListener{
 		title.add(label);
 		title.setOpaque(false);
     
+		text_file = new JLabel();
+		Font police = new Font("Rockwell",Font.BOLD,25);
+		text_file.setFont(police);
+		OpenFile();
 		JPanel highscore = new JPanel();
 		highscore.setBackground(Color.GREEN);
-		String scores = OpenFile();
-		JTextArea text_file = new JTextArea();
-		text_file.setText(scores);
 		highscore.add(text_file);
 		highscore.setOpaque(false);
 		    
@@ -68,6 +68,9 @@ public class MenuJeu extends JFrame implements ActionListener{
 	    String settxt = "SETTINGS";
 		    
 	    player.addActionListener(this);
+	    musicbox.setOpaque(false);
+	    player.setOpaque(false);
+	    difficulty.setOpaque(false);
 	    settings.add(new JLabel(settxt)).setFont(new Font("Serif", Font.BOLD, 30));
 	    settings.add(musicbox);
 	    settings.add(player);
@@ -75,13 +78,13 @@ public class MenuJeu extends JFrame implements ActionListener{
 		
 	    
 	    pan.setLayout(new GridLayout(3,1));
-	    pan.setBackground(Color.MAGENTA);
+	    pan.setBackground(Color.CYAN);
 	    
 	    
 	    JPanel[] espace = new JPanel[20];
 	    for(int i = 0; i< 20; i++){
 	    	espace[i] = new JPanel();
-	    	JLabel emptylabel = new JLabel("test transparence");
+	    	JLabel emptylabel = new JLabel("");
 	    	espace[i].add(emptylabel);
 	    	espace[i].setOpaque(false);
 	    	espace[i].setBackground(getBackground());
@@ -142,23 +145,29 @@ public class MenuJeu extends JFrame implements ActionListener{
 		
 	}
 	
-	public String OpenFile() {
+	public void OpenFile() {
 	
 		BufferedReader br = null;
-		String sCurrentLine = null;
+		String sCurrentLine = "Error while loading...";
+		File txt = new File("C:\\Users\\Alest\\git\\TheDrunkGuy\\src\\Highscore_memory.txt");
+		String totaltext = "<html>";
+		int i = 0;
+		
 		try {
  
-			br = new BufferedReader(new FileReader("C:\\Users\\Alest\\git\\TheDrunkGuy\\src\\Highscore_memory.txt"));
+			br = new BufferedReader(new FileReader(txt));
  
 			while ((sCurrentLine = br.readLine()) != null) {
-				System.out.println(sCurrentLine);
+				i++;
+				totaltext = totaltext + sCurrentLine + "<br>";
 			}
+			totaltext = totaltext + "</html>";
+			text_file.setText(totaltext);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-		}	
+		}
 		
-		return sCurrentLine;
 		
 	}
 
