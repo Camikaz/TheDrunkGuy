@@ -1,3 +1,4 @@
+/*
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -116,3 +117,4 @@ public class Membre extends Objet {
 
 
 }
+*/

@@ -84,7 +84,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		sonCollision.setLoopPoints(2000,22000);
 
 		//Place this wherever you want - Appuyer sur M pour arrêter la musique
-		clip.start(); //or c lip.loop(0); clip.loop(LOOP_CONTINUOUSLY);
+		clip.loop(Clip.LOOP_CONTINUOUSLY); //or c lip.loop(0); clip.loop(LOOP_CONTINUOUSLY);
 		//Fin de la configuration du son
 		}
 		
@@ -97,6 +97,15 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//Declaration de la liste des objets
 		Liste = new LinkedList<Objet>();
+
+		//Rectangle qui définit le DrunkGuy - dimensions
+		Point dg1 = new Point(-150,0);
+		Point dg2 = new Point(-150,700);
+		Point dg3 = new Point(150,700);
+		Point dg4 = new Point(150,0);
+		Point[] tabGuy = {dg1, dg2, dg3, dg4};
+		Objet Guy = new Obstacle(tabGuy, 10, 1);
+		Liste.add(Guy);
 		
 		
 		/*Creation des polygones*/
@@ -149,15 +158,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste.add(Poly2);
 		Liste.add(Poly3);
 		Liste.add(Poly4);
-
-		//Rectangle qui définit le DrunkGuy - dimensions
-		Point dg1 = new Point(-150,0);
-		Point dg2 = new Point(-150,700);
-		Point dg3 = new Point(150,700);
-		Point dg4 = new Point(150,0);
-		Point[] tabGuy = {dg1, dg2, dg3, dg4};
-		Objet Guy = new Obstacle(tabGuy, 10, 0);
-		Liste.add(Guy);
 		
 		//Des maisons
 		for(int i = 0; i< 100 ; i++){
@@ -198,19 +198,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
         Voiture.vy = 20;
         Voiture.angularSpeed = 5;
         Liste.add(Voiture);
-
-		// voiture
-		double[] limvoiture = {-3000,3000, 0, 1000, 0,10000};
-		A = new Point(-3000,0);
-		B = new Point(-3000,500);
-		C = new Point(-2000,500);
-		D = new Point(-2000,0);
-		Point[] tabvoiture = {A,B,C,D};
-		Obstacle Voiture = new Obstacle(tabvoiture,300,0,limvoiture);
-		Voiture.vx = 5;
-		Voiture.vy = 20;
-		Voiture.angularSpeed = 5;
-		Liste.add(Voiture);
 
 
 
@@ -341,14 +328,12 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//Evolution de chaque objet
 		for(int i = 0; i<= Liste.size() -1 ; i++){
-			for(int j = 0; j <= Liste.get(i).npoints -1 ; j++){
-				Liste.get(i).move();
-			}
+			Liste.get(i).move();
 		}
 		
 		// juste pour test un peu de deplacement elementaire
-		Liste.get(0).translate(Math.cos(temps*0.01), 0);
-		Liste.get(0).rotate(5*Math.cos(temps*0.01), Liste.get(0).points[2]);
+		Liste.get(2).translate(Math.cos(temps*0.01), 0);
+		Liste.get(2).rotate(5*Math.cos(temps*0.01), Liste.get(0).points[2]);
 		Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);
 		
 		
@@ -367,8 +352,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		
 		//Pour que la camera avance (provoque des glitchs car j'ai jamais gere le cas ou zObjet = zObjectif
 		
-		//Geo.Obj.z+=1;
-		//Geo.zP+=1;
+		Geo.Obj.z+=1;
+		Geo.zP+=1;
 		
 		
 		repaint();
@@ -431,27 +416,47 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-		if(arg0.getKeyChar()=='-'){
-			if(Geo.zP<Geo.Obj.z-1){
-				Geo.zP +=1;
-			} else {
-				Geo.zP=Geo.Obj.z -1;
-			}
+		switch(arg0.getKeyChar()){
+			case '-':
+				if(Geo.zP<Geo.Obj.z-1){
+					Geo.zP +=1;
+				} else {
+					Geo.zP=Geo.Obj.z -1;
+				}
+				break;
+			case '+':
+				Geo.zP -=1;
+				break;
+			case 'm':
+				if(clip.isActive()){clip.stop();}
+				else {clip.start();}
+				break;
+			case 'a':
+				if(admin){admin = false;}
+				else {admin = true;}
+				break;
+
+			//déplacements latéraux - j'arrive pas à bouger avec les fleches donc pr le moment : J,K
+			case 'j':
+				Liste.get(0).translate(-100,0);
+				Geo.Obj.x -=100;
+				break;
+			case 'k':
+				Liste.get(0).translate(100,0);
+				Geo.Obj.x +=100;
+				break;
 		}
-		if(arg0.getKeyChar()=='+'){
-			Geo.zP -=1;
-		}
-		if(arg0.getKeyChar()=='m'){
-			if(clip.isActive()){clip.stop();}
-			else {clip.start();}
-		}
-		
-		if(arg0.getKeyChar()=='a'){
-			if(admin){admin = false;}
-			else {admin = true;}
-		}
-		
-		
+
+		/*switch(arg0.getKeyCode()){
+			case KeyEvent.VK_LEFT:
+				Liste.get(0).translate(-100,0);
+				Geo.Obj.x -=100;
+				break;
+			case KeyEvent.VK_RIGHT:
+				Liste.get(0).translate(100,0);
+				Geo.Obj.x +=100;
+				break;
+		}*/
 	}
 
 }
