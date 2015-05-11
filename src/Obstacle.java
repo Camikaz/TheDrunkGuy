@@ -4,27 +4,14 @@ import java.util.LinkedList;
 
 
 public class Obstacle extends Objet {
-
-
+	
+	
 	protected boolean actif; //actif si l'objet est dans la zone de contact, variable a remplacer par un boolean "decor" peut etre
 	public double[] limites = new double[6]; // {xmin, xmax, ymin, ymax, zmin, zmax}
 	public double vx, vy;
 	public double angularSpeed;
 	
 	
-	/*public Obstacle(Point[] Points) {
-		super(Points);
-		setZ(100);
-		dz = -0.01;
-		actif = false;
-	}*/
-
-	/**
-	 *
-	 * @param Points tableau de pts
-	 * @param az
-	 * @param adz
-	 */
 	public Obstacle(Point[] Points, double az, double adz) {
 		super(Points);
 		vx = 0;
@@ -45,32 +32,35 @@ public class Obstacle extends Objet {
 		setDz(adz);
 		limites = aLim;
 	}
-
-
+	
 	public double getZ(){
 		return z;
 	}
 	public double getDz(){
 		return dz;
 	}
-
+	
 	public void setZ(double az){
 		this.z = az;
-	}
+
+		for(int i = 0; i< this.npoints; i++){
+			this.points[i].z = az;
+		}
+		
+	}	
 	public void setDz (double adz){
 		this.dz = adz;
 	}
 
-	/*public void setVelocity (double dx, double dy){
-		velocity.x = dx;
-		velocity.y = dy;
-	}*/
+
 
 	public void addVitesse(double dx, double dy){
-		for(int i=0; i<this.npoints; i++){
-			this.points[i].dx += dx;
-			this.points[i].dy += dy;
-		}
+		vx += dx;
+		vy += dy;
+	}
+	
+	public void addAngularSpeed(double theta){
+		angularSpeed += theta;
 	}
 
 	public Point CenterOfMass() {
@@ -152,5 +142,5 @@ public class Obstacle extends Objet {
 		this.setZ(this.getZ() + this.getDz());
 
 	}
-
+	
 }

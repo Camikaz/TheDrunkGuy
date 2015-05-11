@@ -1,33 +1,24 @@
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JTextField;
+import javax.swing.*;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 
+@SuppressWarnings("serial")
 public class MenuJeu extends JFrame implements ActionListener{
+	
 	
 	public String player_name = "Player 1";
 	public String PLAY = "PLAY";
 	public JButton play;
 	public JLabel label;
+	public JLabel text_file;
 	public JCheckBox musicbox = new JCheckBox("Soundtrack is ON", true);
 	public JTextField player = new JTextField("Enter Player's Name...");
 	public JSlider difficulty = new JSlider(0,30,10);
@@ -37,6 +28,7 @@ public class MenuJeu extends JFrame implements ActionListener{
 	
 	public MenuJeu(){
 		
+		
 		this.setSize(1000,700);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -44,118 +36,88 @@ public class MenuJeu extends JFrame implements ActionListener{
 		this.setTitle("Main menu : Welcome " +player_name);
 		this.setResizable(true);
 		
+		
 		JPanel pan = new JPanel();
 		
 		label = new JLabel("The Drunken Mile");
-		label.setFont(new Font("BlackBoard", Font.BOLD, 70));
+		label.setFont(new Font("BlackBoard", Font.BOLD, 60));
 		play = new JButton(PLAY);
-		play.setFont(new Font("BlackBoard", Font.BOLD, 50));
 		play.addActionListener(this);
 		
-			JPanel title = new JPanel(); //titre
-		    title.setPreferredSize(new Dimension(1000, 200));
-		    title.add(label);
+		JPanel title = new JPanel(); //titre
+		title.add(label);
+		title.setOpaque(false);
+    
+		text_file = new JLabel();
+		Font police = new Font("Rockwell",Font.BOLD,25);
+		text_file.setFont(police);
+		OpenFile();
+		JPanel highscore = new JPanel();
+		highscore.setBackground(Color.GREEN);
+		highscore.add(text_file);
+		highscore.setOpaque(false);
 		    
-		    JPanel jouer = new JPanel(); // contient le jbutton play
-		    jouer.setBackground(Color.PINK);
-		    jouer.setPreferredSize(new Dimension(1000, 100));
-		    jouer.setLayout(new GridLayout(1,3));
-		    jouer.add(new JPanel());
-		    jouer.add(play);
-		    jouer.add(new JPanel());
+	    JPanel settings = new JPanel();
+	    settings.setBackground(Color.CYAN);
+	    settings.setOpaque(false);
+	    settings.setLayout(new GridLayout(4,2));
+		
+		// parametres modifiables dans le menu
 		    
-		   
-		    JPanel highscore = new JPanel();
-		    highscore.setBackground(Color.YELLOW);
-		    highscore.setPreferredSize(new Dimension(500, 300 ));
+		musicbox.addActionListener(this);
+	    String settxt = "SETTINGS";
 		    
-		    JPanel Settings = new JPanel();
-		    Settings.setBackground(Color.BLACK);
-		    Settings.setPreferredSize(new Dimension(500, 300));
-		    Settings.setLayout(new GridLayout(4,2));
-		    
-		    // parametres modifiables dans le menu
-		    
-		    musicbox.addActionListener(this);
-		    String settxt = "                       SETTINGS";
-		    
-		    player.addActionListener(this);
-		    Settings.add(new JLabel(settxt)).setFont(new Font("Serif", Font.BOLD, 30));
-		    Settings.add(musicbox);
-		    Settings.add(player);
-		    Settings.add(difficulty);
-		    
-		    JPanel espace1 = new JPanel();
-		    espace1.setPreferredSize(new Dimension(1000, 50));
-		    JPanel espace2 = new JPanel();
-		    espace2.setPreferredSize(new Dimension(1000, 50));
-		    
-		    //Le conteneur principal
-		    pan.setPreferredSize(new Dimension(1000, 700));
-
-		    //On définit le layout manager
-		    pan.setLayout(new GridBagLayout());
-		    pan.setBackground(Color.WHITE);
-		    
-		    //L'objet servant à positionner les composants
-		    GridBagConstraints gbc = new GridBagConstraints();
-		    
-		    //La taille en hauteur et en largeur
-		    gbc.gridheight = 1;
-		    gbc.gridwidth = 2;
-		    gbc.weightx= 0.8;
-		    gbc.weighty = 1.0;
-		    gbc.fill = GridBagConstraints.BOTH;
-		    
-		    //On positionne la case de départ du composant ici le titre
-		    gbc.gridx = 0;
-		    gbc.gridy = 0;
-		    pan.add(espace1, gbc);
-		    
-		    gbc.gridx = 0;
-		    gbc.gridy = 1;
-		    pan.add(title, gbc);
-		    
-		    //---------------------------------------------
-		    gbc.gridx = 0;
-		    gbc.gridy = 2;
-		    gbc.weighty = 0.2;
-		    
-		    pan.add(espace1, gbc);
-		    //---------------------------------------------
-		    gbc.gridx = 0;
-		    gbc.gridy =3;
-		    gbc.weighty = 0.6;
-		    
-		    pan.add(jouer, gbc);        
-		    //---------------------------------------------
-		    //Cette instruction informe le layout que c'est une fin de ligne
-		    gbc.gridx = 0;
-		    gbc.gridy = 4;
-		    gbc.weighty = 0.2;
-		    pan.add(espace2, gbc);
-		    
-		    //---------------------------------------------
-		    gbc.gridwidth = 1;
-		    gbc.gridheight = GridBagConstraints.REMAINDER;
-		    gbc.gridx = 0;
-		    gbc.gridy = 5;
-		    gbc.weighty = 1.0;
-		    pan.add(highscore, gbc);
-		    
-		    
-		    gbc.gridwidth = GridBagConstraints.REMAINDER;
-		    gbc.gridheight = GridBagConstraints.REMAINDER;
-		    gbc.gridx = GridBagConstraints.RELATIVE;
-		    gbc.gridy = 5;
-		    gbc.weighty = 1.0;
-		    pan.add(Settings, gbc);
-		    
-		    
-		    //---------------------------------------------
-		    //On ajoute le conteneur
-		    this.setContentPane(pan);
-		    this.setVisible(true);
+	    player.addActionListener(this);
+	    musicbox.setOpaque(false);
+	    player.setOpaque(false);
+	    difficulty.setOpaque(false);
+	    settings.add(new JLabel(settxt)).setFont(new Font("Serif", Font.BOLD, 30));
+	    settings.add(musicbox);
+	    settings.add(player);
+	    settings.add(difficulty);
+		
+	    
+	    pan.setLayout(new GridLayout(3,1));
+	    pan.setBackground(Color.CYAN);
+	    
+	    
+	    JPanel[] espace = new JPanel[20];
+	    for(int i = 0; i< 20; i++){
+	    	espace[i] = new JPanel();
+	    	JLabel emptylabel = new JLabel("");
+	    	espace[i].add(emptylabel);
+	    	espace[i].setOpaque(false);
+	    	espace[i].setBackground(getBackground());
+	    }
+	   
+	   
+		JPanel firstpan = new JPanel();
+		firstpan.setLayout(new GridLayout(3,1));
+		firstpan.setOpaque(false);
+		firstpan.add(espace[0]);
+		firstpan.add(title);
+		firstpan.add(espace[1]);
+		pan.add(firstpan);
+		
+		JPanel secondpan = new JPanel();
+		secondpan.setLayout(new GridLayout(1,3));
+		secondpan.setOpaque(false);
+	   	secondpan.add(espace[2]);
+		secondpan.add(play);
+		secondpan.add(espace[3]);
+		pan.add(secondpan);
+		
+		JPanel thirdpan = new JPanel();
+		thirdpan.setLayout(new GridLayout(1,2));
+		thirdpan.setOpaque(false);
+	   	thirdpan.add(highscore);
+		thirdpan.add(settings);
+		pan.add(thirdpan);
+		
+		//---------------------------------------------
+	    //On ajoute le conteneur
+	    this.add(pan);
+	    this.setVisible(true);
 		    
 	}
 
@@ -180,6 +142,32 @@ public class MenuJeu extends JFrame implements ActionListener{
 				musicbox.setText("Soundtrack is OFF ");
 			}
 		}
+		
+	}
+	
+	public void OpenFile() {
+	
+		BufferedReader br = null;
+		String sCurrentLine = "Error while loading...";
+		File txt = new File("C:\\Users\\Alest\\git\\TheDrunkGuy\\src\\Highscore_memory.txt");
+		String totaltext = "<html>";
+		int i = 0;
+		
+		try {
+ 
+			br = new BufferedReader(new FileReader(txt));
+ 
+			while ((sCurrentLine = br.readLine()) != null) {
+				i++;
+				totaltext = totaltext + sCurrentLine + "<br>";
+			}
+			totaltext = totaltext + "</html>";
+			text_file.setText(totaltext);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		
 	}
 
