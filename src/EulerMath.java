@@ -1,3 +1,4 @@
+/*
 
 public abstract class EulerMath {
 	//----------Decleration of times variables--------------//
@@ -5,9 +6,11 @@ public abstract class EulerMath {
 	final static double dt = 1/FPS; 
 	double currentTime;
 	double timeCounter;
-	/* dt is the time period, inverse of the display frequency which is 100 fps
+	*/
+/* dt is the time period, inverse of the display frequency which is 100 fps
 	 * 
-	 */
+	 *//*
+
 	//-----------------------------------------------------------------------------------//
 	
 	
@@ -24,9 +27,11 @@ public abstract class EulerMath {
 		}
 	}
 	
-	/* The torque has to be along the z axis that's why we only need its magnitude i.e the double torque
+	*/
+/* The torque has to be along the z axis that's why we only need its magnitude i.e the double torque
 	 * 
-	 */
+	 *//*
+
 	
 	public static void applyInstantTorque(Membre o, double torque) {
 		o.angularVelocity += dt*torque/o.inertia;
@@ -44,3 +49,4 @@ public abstract class EulerMath {
 	
 	
 }
+*/
