@@ -48,6 +48,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	public static Mixer mixer;
 	public static Clip clip, sonCollision;
 
+	Obstacle Guy;
+
 	public FenetreDrunk(){
 
 		if(MenuJeu.sound){
@@ -104,7 +106,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Point dg3 = new Point(150,700);
 		Point dg4 = new Point(150,0);
 		Point[] tabGuy = {dg1, dg2, dg3, dg4};
-		Objet Guy = new Obstacle(tabGuy, 10, 1);
+		Guy = new Obstacle(tabGuy, 10, 1);
 		Liste.add(Guy);
 		
 		
@@ -343,17 +345,20 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			if(admin){
 				Geo.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
 				Geo.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
+
 			}
 			else{
+				//on suit le Guy
+				Geo.Obj.z = Guy.z - 50;
+				Geo.zP = Geo.Obj.z - 60;
+
+				Geo.Obj.x = Guy.CenterOfMass().x;
+				Geo.Obj.y= Guy.CenterOfMass().y + 200;
+				// balancement
 				Geo.Obj.x += 10*Math.cos(temps*0.1);
 				Geo.Obj.y += -20*Math.sin(temps*0.2);
 			}
 		}
-
-		//Pour que la camera avance (provoque des glitchs car j'ai jamais gere le cas ou zObjet = zObjectif
-
-		Geo.Obj.z+=1;
-		Geo.zP+=1;
 
 
 		repaint();
@@ -404,7 +409,14 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		// TODO Auto-generated method stub
+		switch(arg0.getKeyCode()){
+			case KeyEvent.VK_LEFT:
+				Guy.vx=-8;
+				break;
+			case KeyEvent.VK_RIGHT:
+				Guy.vx=8;
+				break;
+		}
 
 	}
 
@@ -421,7 +433,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				if(Geo.zP<Geo.Obj.z-1){
 					Geo.zP +=1;
 				} else {
-					Geo.zP=Geo.Obj.z -1;
+					Geo.zP=Geo.Obj.z-1;
 				}
 				break;
 			case '+':
@@ -435,28 +447,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				if(admin){admin = false;}
 				else {admin = true;}
 				break;
-
-			//déplacements latéraux - j'arrive pas à bouger avec les fleches donc pr le moment : J,K
-			case 'j':
-				Liste.get(0).translate(-100,0);
-				Geo.Obj.x -=100;
-				break;
-			case 'k':
-				Liste.get(0).translate(100,0);
-				Geo.Obj.x +=100;
-				break;
 		}
-
-		/*switch(arg0.getKeyCode()){
-			case KeyEvent.VK_LEFT:
-				Liste.get(0).translate(-100,0);
-				Geo.Obj.x -=100;
-				break;
-			case KeyEvent.VK_RIGHT:
-				Liste.get(0).translate(100,0);
-				Geo.Obj.x +=100;
-				break;
-		}*/
 	}
 
 }

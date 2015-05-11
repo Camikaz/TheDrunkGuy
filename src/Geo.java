@@ -3,7 +3,7 @@ public class Geo {
 	
 
 	public static Point Obj = new Point(0, 650, -50); //Objectif pour filmer l image
-	public static double zP = -90; //la profondeur du plan ecran de la camera
+	public static double zP = -70; //la profondeur du plan ecran de la camera
 	
 
 	//Renvoie le point correspondant au dessin sur le plan du point d'entr�e a une profondeur Z
