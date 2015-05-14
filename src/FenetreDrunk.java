@@ -49,6 +49,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	public static Clip clip, sonCollision;
 
 	Obstacle Guy;
+	int score = 0;
+	int malus = 0; // un truc pour le score
 
 	public FenetreDrunk(){
 
@@ -306,6 +308,20 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		}
 		buffer.drawString("Ca touche "+ PtInter.size() +" fois !", 20, 50);
 
+		//faut peut-être l'insérer dans la boucle, mais je veux gérer à part le cas où le Guy (Liste.get(0))
+		//cogne dans un truc, pour changer le score ou autre...
+		for(int i=1; i<Liste.size(); i++){
+			if(Liste.get(0).Intersect(Liste.get(i))){
+				malus +=1;
+			}
+		}
+
+		if(score<0){
+			score = 0;
+		} else {
+			score = (int)(temps*0.03) - malus;
+		}
+
 
 		for(int l = 0 ; l <= PtInter.size()-1 ; l++){
 			//Calcul de la position a l ecran des pt d'intersection pour ecrire "�a touche'
@@ -315,7 +331,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		}
 
 		// petits tests pour un HUD - on ajoutera du texte en fct de l'évolution du jeu :)
-		int score =(int)(temps*0.03);
 
 		Font police = new Font("Courier", Font.BOLD, 24); //mettez any font you like !
 		buffer.setFont(police);
@@ -419,7 +434,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				} else {
 					Guy.vx-=2;
 				}
-				System.out.println(Guy.vx);
+				//System.out.println(Guy.vx);
 				break;
 			case KeyEvent.VK_RIGHT:
 				if(Guy.vx<-30){
@@ -427,7 +442,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				} else {
 					Guy.vx+=2;
 				}
-				System.out.println(Guy.vx);
+				//System.out.println(Guy.vx);
 				break;
 		}
 
