@@ -29,7 +29,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	private Timer timer;
 	private LinkedList<Objet> Liste; //La Liste de tout les objets a afficher
 
-	private boolean admin = false;
+	private boolean admin = true;
 
 	private Graphics buffer; //On dessine la dedans, vous connaissez le principe d'un buffer
 	private BufferedImage ArrierePlan;
@@ -112,7 +112,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste.add(Guy);
 		
 		
-		/*Creation des polygones*/
+		//Creation des polygones
 		Point A = new Point(200,0);
 		Point B = new Point(300,0);
 		Point C = new Point(400,600);
@@ -163,31 +163,10 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste.add(Poly3);
 		Liste.add(Poly4);
 
-		//Des maisons
+		//Des maisons à gauche et à droite
 		for(int i = 0; i< 100 ; i++){
-			double positionLaterale = 10000*Math.random();
-			A = new Point(positionLaterale-500,0);
-			B = new Point(positionLaterale+500,0);
-			C = new Point(positionLaterale+500,1500);
-			D = new Point(positionLaterale,2000);
-			E = new Point(positionLaterale-500,1500);
-			Point[] tabloCo = {A,B,C,D,E};
-			Obstacle Maison = new Obstacle(tabloCo, i*25 , 0);
-			//Maison.angularSpeed = 10*Math.sin(0.01*i); //vitesse angulaire random, juste pour le fun
-			Liste.add(Maison);
-		}
-
-		//Encore des maisons
-		for(int i = 0; i<100 ; i++){
-			double positionLaterale = -10000*Math.random();
-			A = new Point(positionLaterale-500,0);
-			B = new Point(positionLaterale+500,0);
-			C = new Point(positionLaterale+500,1500);
-			D = new Point(positionLaterale,2000);
-			E = new Point(positionLaterale-500,1500);
-			Point[] tabloCo = {A,B,C,D,E};
-			Objet Maison = new Obstacle(tabloCo, i*25 , 0);
-			Liste.add(Maison);
+			creerMaison(Liste, i*35, true);
+			creerMaison(Liste, i*35, false);
 		}
 
 		// voiture
@@ -339,6 +318,20 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		buffer.drawString("Vies : "+ 3, (int)LARGEUR-150, (int)HAUTEUR-20); // 3 vies, on verra comment on gère ça hein
 
 		g.drawImage(ArrierePlan,0,0,this);
+	}
+
+	public void creerMaison(LinkedList liste, double z, boolean left){
+		double centreSol = 10000*Math.random();
+		if(left){centreSol*=-1;}
+		Point A, B, C, D, E;
+		A = new Point(centreSol-500,0);
+		B = new Point(centreSol+500,0);
+		C = new Point(centreSol+500,1500);
+		D = new Point(centreSol,2000);
+		E = new Point(centreSol-500,1500);
+		Point[] tabloCo = {A,B,C,D,E};
+		Obstacle Maison = new Obstacle(tabloCo, z , 0);
+		liste.add(Maison);
 	}
 
 
