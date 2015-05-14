@@ -189,17 +189,20 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		}
 
 		// voiture
-		double[] limvoiture = {-3000,3000, 0, 1000, 0,10000};
-		A = new Point(-3000,0);
-		B = new Point(-3000,500);
-		C = new Point(-2000,500);
-		D = new Point(-2000,0);
-		Point[] tabvoiture = {A,B,C,D};
-		Obstacle Voiture = new Obstacle(tabvoiture,300,0,limvoiture);
-		Voiture.vx = 5;
-		Voiture.vy = 20;
-		Voiture.angularSpeed = 5;
-		Liste.add(Voiture);
+		for(int i = 0; i<50; i++){
+			double centreLV = 10000*Math.random() - 10000*Math.random();
+			double[] limvoiture = {-5000,5000, 0, 1000, 0,10000};
+			A = new Point(centreLV-3000,100);
+			B = new Point(centreLV-3000,600);
+			C = new Point(centreLV-2000,600);
+			D = new Point(centreLV-2000,100);
+			Point[] tabvoiture = {A,B,C,D};
+			Obstacle Voiture = new Obstacle(tabvoiture,100 + i*40,0,limvoiture);
+			Voiture.vx = 30;
+			//Voiture.vy = 20;
+			//Voiture.angularSpeed = 5;
+			Liste.add(Voiture);
+		}
 
 
 
