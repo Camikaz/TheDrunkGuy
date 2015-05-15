@@ -52,6 +52,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	int score = 0;
 	int vies = 3;
 
+    int indexMaison = 1;
+
     // boolean nouvelleMaisonCreee = false;
 
 	public FenetreDrunk(){
@@ -524,6 +526,11 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				if(admin){admin = false;}
 				else {admin = true;}
 				break;
+            case 'n':
+                newMaison(Liste, indexMaison * 50, true);
+                indexMaison++;
+                break;
+
 		}
 	}
 
