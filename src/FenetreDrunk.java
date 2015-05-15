@@ -169,8 +169,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste.add(Poly4);
 
 		//Des maisons à gauche et à droite
-		for(int i = 0; i< 10 ; i++){
-			//newMaison(Liste, i * 50, true);
+		for(int i = 0; i< 20 ; i++){
+			newMaison(Liste, i*50, true);
 			newMaison(Liste, i*50 , false);
 		}
 
@@ -365,8 +365,9 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);
 
             //Creation de nouvelle maison
-            if(temps%50==0){
-                newMaison(Liste, indexMaison * 50, true);
+            if(temps%70==0){
+                newMaison(Liste, 1000 + indexMaison * 50, true);
+				newMaison(Liste, 1000 + indexMaison * 50, false);
                 indexMaison++;
             }
 
@@ -392,7 +393,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			}
 			repaint();
 			temps++;
-            System.out.println(temps);
 		}
 
 	}
