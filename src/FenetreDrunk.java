@@ -352,6 +352,13 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				Liste.get(i).move();
 			}
 
+			//supprime les obstacles (derrière le bonhomme à -50) au fil du temps
+			for(int i = 1; i<= Liste.size() -1 ; i++){
+				if(Liste.get(i).z<Liste.get(0).z - 50){
+					Liste.remove(i);
+				}
+			}
+
 			// juste pour test un peu de deplacement elementaire
 			Liste.get(2).translate(Math.cos(temps*0.01), 0);
 			Liste.get(2).rotate(5*Math.cos(temps*0.01), Liste.get(0).points[2]);
