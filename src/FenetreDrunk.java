@@ -182,13 +182,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			newVoiture(Liste, i*30, limvoiture);
 		}
 
-        /*if(temps>500){
-            for(int i=0; i<20;i++){
-                newMaison(Liste, 500 + i * 50, true);
-                //nouvelleMaisonCreee = true;
-                System.out.println("true");
-            }
-        }*/
+
 
 		//fin de la creation des objets
 
@@ -363,6 +357,11 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			Liste.get(2).rotate(5*Math.cos(temps*0.01), Liste.get(0).points[2]);
 			Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);
 
+            //Creation de nouvelle maison
+            if(temps%50==0){
+                newMaison(Liste, indexMaison * 50, true);
+                indexMaison++;
+            }
 
 			//Camera qui bouge
 
@@ -387,7 +386,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			repaint();
 			temps++;
             System.out.println(temps);
-
 		}
 
 	}
