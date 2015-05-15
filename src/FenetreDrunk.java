@@ -50,7 +50,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 	Obstacle Guy;
 	int score = 0;
-	int malus = 0; // un truc pour le score
+	int vies = 3;
 
 	public FenetreDrunk(){
 
@@ -164,28 +164,16 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste.add(Poly4);
 
 		//Des maisons à gauche et à droite
-		for(int i = 0; i< 100 ; i++){
-			creerMaison(Liste, i*35, true);
-			creerMaison(Liste, i*35, false);
+		for(int i = 0; i< 70 ; i++){
+			newMaison(Liste, i * 50, true);
+			newMaison(Liste, i*50 , false);
 		}
-
 		// voiture
+		double[] limvoiture = {-5000,5000, 0, 1000, 0,10000};
+
 		for(int i = 0; i<50; i++){
-			double centreLV = 10000*Math.random() - 10000*Math.random();
-			double[] limvoiture = {-5000,5000, 0, 1000, 0,10000};
-			A = new Point(centreLV-3000,100);
-			B = new Point(centreLV-3000,600);
-			C = new Point(centreLV-2000,600);
-			D = new Point(centreLV-2000,100);
-			Point[] tabvoiture = {A,B,C,D};
-			Obstacle Voiture = new Obstacle(tabvoiture,100 + i*40,0,limvoiture);
-			Voiture.vx = 30;
-			//Voiture.vy = 20;
-			//Voiture.angularSpeed = 5;
-			Liste.add(Voiture);
+			newVoiture(Liste, i*30, limvoiture);
 		}
-
-
 
 		//fin de la creation des objets
 
@@ -193,8 +181,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addKeyListener(this);
-
-
 
 		//Initialisation du timer
 		timer = new Timer(30,this);
@@ -288,19 +274,15 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		buffer.drawString("Ca touche "+ PtInter.size() +" fois !", 20, 50);
 
 		//faut peut-être l'insérer dans la boucle, mais je veux gérer à part le cas où le Guy (Liste.get(0))
-		//cogne dans un truc, pour changer le score ou autre...
+		//cogne dans un truc, pr diminuer son nb de vies ou autre
 		for(int i=1; i<Liste.size(); i++){
 			if(Liste.get(0).Intersect(Liste.get(i))){
-				malus +=1;
+				vies-=1;
 			}
 		}
 
-		if(score<0){
-			score = 0;
-		} else {
-			score = (int)(temps*0.03) - malus;
-		}
 
+		score = (int)(temps*0.03);
 
 		for(int l = 0 ; l <= PtInter.size()-1 ; l++){
 			//Calcul de la position a l ecran des pt d'intersection pour ecrire "�a touche'
@@ -315,12 +297,12 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		buffer.setFont(police);
 		buffer.setColor(Color.WHITE);
 		buffer.drawString("Score : " + score, 20, (int)HAUTEUR-20);
-		buffer.drawString("Vies : "+ 3, (int)LARGEUR-150, (int)HAUTEUR-20); // 3 vies, on verra comment on gère ça hein
+		buffer.drawString("Vies : "+ vies, (int)LARGEUR-150, (int)HAUTEUR-20); // 3 vies, on verra comment on gère ça hein
 
 		g.drawImage(ArrierePlan,0,0,this);
 	}
 
-	public void creerMaison(LinkedList liste, double z, boolean left){
+	public void newMaison(LinkedList liste, double z, boolean left){
 		double centreSol = 10000*Math.random();
 		if(left){centreSol*=-1;}
 		Point A, B, C, D, E;
@@ -332,6 +314,19 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Point[] tabloCo = {A,B,C,D,E};
 		Obstacle Maison = new Obstacle(tabloCo, z , 0);
 		liste.add(Maison);
+	}
+
+	public void newVoiture(LinkedList liste, double z, double[] lim){
+		double centreLV = 10000*Math.random() - 10000*Math.random();
+		Point A, B, C, D;
+		A = new Point(centreLV-3000,100);
+		B = new Point(centreLV-3000,600);
+		C = new Point(centreLV-2000,600);
+		D = new Point(centreLV-2000,100);
+		Point[] tabvoiture = {A,B,C,D};
+		Obstacle Voiture = new Obstacle(tabvoiture,z,0,lim);
+		Voiture.vx = 16;
+		liste.add(Voiture);
 	}
 
 
@@ -373,7 +368,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 
 		repaint();
-		temps ++;
+		temps++;
 
 	}
 
