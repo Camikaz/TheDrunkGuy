@@ -24,7 +24,7 @@ import javax.swing.Timer;
 
 
 public class FenetreDrunk extends JFrame implements MouseListener,
-		MouseMotionListener, ActionListener, KeyListener {
+		MouseMotionListener,/* ActionListener,*/ KeyListener {
 
 	private Timer timer;
 	private LinkedList<Objet> Liste; //La Liste de tout les objets a afficher
@@ -52,7 +52,10 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	int score = 0;
 	int vies = 3;
 
+    // boolean nouvelleMaisonCreee = false;
+
 	public FenetreDrunk(){
+        temps = 0;
 
 		if(MenuJeu.sound){
 
@@ -164,16 +167,26 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste.add(Poly4);
 
 		//Des maisons à gauche et à droite
-		for(int i = 0; i< 70 ; i++){
-			newMaison(Liste, i * 50, true);
+		for(int i = 0; i< 10 ; i++){
+			//newMaison(Liste, i * 50, true);
 			newMaison(Liste, i*50 , false);
 		}
+
+
 		// voiture
 		double[] limvoiture = {-5000,5000, 0, 1000, 0,10000};
 
 		for(int i = 0; i<50; i++){
 			newVoiture(Liste, i*30, limvoiture);
 		}
+
+        /*if(temps>500){
+            for(int i=0; i<20;i++){
+                newMaison(Liste, 500 + i * 50, true);
+                //nouvelleMaisonCreee = true;
+                System.out.println("true");
+            }
+        }*/
 
 		//fin de la creation des objets
 
@@ -183,7 +196,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		addKeyListener(this);
 
 		//Initialisation du timer
-		timer = new Timer(30,this);
+		timer = new Timer(30,new TimerAction());
 		timer.start();
 
 	}
@@ -212,7 +225,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		B = Geo.perspectiveP(B);
 
 		buffer.setColor(Color.white);
-		buffer.drawLine((int) A.x,((int)A.y),(int) B.x,(int) B.y);
+		buffer.drawLine((int) A.x,(int)A.y,(int) B.x,(int) B.y);
 
 
 		//pour tous �a il faut comprendre comment j ai fait la perspective : un point sera dessine en projetant son x et
@@ -299,6 +312,12 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		buffer.drawString("Score : " + score, 20, (int)HAUTEUR-20);
 		buffer.drawString("Vies : "+ vies, (int)LARGEUR-150, (int)HAUTEUR-20); // 3 vies, on verra comment on gère ça hein
 
+        /*if(nouvelleMaisonCreee){
+            buffer.drawString("oui", (int)(LARGEUR*0.5), (int)HAUTEUR-20);
+        } else {
+            buffer.drawString("non", (int)(LARGEUR*0.5), (int)HAUTEUR-20);
+        }*/
+
 		g.drawImage(ArrierePlan,0,0,this);
 	}
 
@@ -329,10 +348,52 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		liste.add(Voiture);
 	}
 
+	private class TimerAction implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+
+			//Evolution de chaque objet
+			for(int i = 0; i<= Liste.size() -1 ; i++){
+				Liste.get(i).move();
+			}
+
+			// juste pour test un peu de deplacement elementaire
+			Liste.get(2).translate(Math.cos(temps*0.01), 0);
+			Liste.get(2).rotate(5*Math.cos(temps*0.01), Liste.get(0).points[2]);
+			Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);
 
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
+			//Camera qui bouge
+
+			if (Geo.Obj.y +  0.1*(HAUTEUR*0.5 - soury) >=0){
+				if(admin){
+					Geo.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
+					Geo.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
+
+				}
+				else{
+					//on suit le Guy
+					Geo.Obj.z = Guy.z - 50;
+					Geo.zP = Geo.Obj.z - 60;
+
+					Geo.Obj.x = Guy.CenterOfMass().x;
+					Geo.Obj.y= Guy.CenterOfMass().y + 200;
+					// balancement
+					Geo.Obj.x += 10*Math.cos(temps*0.1);
+					Geo.Obj.y += -20*Math.sin(temps*0.2);
+				}
+			}
+			repaint();
+			temps++;
+            System.out.println(temps);
+
+		}
+
+	}
+
+
+
+	//@Override
+	/*public void actionPerformed(ActionEvent arg0) {
 
 		//Evolution de chaque objet
 		for(int i = 0; i<= Liste.size() -1 ; i++){
@@ -370,7 +431,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		repaint();
 		temps++;
 
-	}
+	}*/
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
