@@ -24,12 +24,12 @@ import javax.swing.Timer;
 
 
 public class FenetreDrunk extends JFrame implements MouseListener,
-		MouseMotionListener, ActionListener, KeyListener {
+		MouseMotionListener,/* ActionListener,*/ KeyListener {
 
 	private Timer timer;
 	private LinkedList<Objet> Liste; //La Liste de tout les objets a afficher
 
-	private boolean admin = false;
+	private boolean admin = true;
 
 	private Graphics buffer; //On dessine la dedans, vous connaissez le principe d'un buffer
 	private BufferedImage ArrierePlan;
@@ -49,8 +49,15 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	public static Clip clip, sonCollision;
 
 	Obstacle Guy;
+	int score = 0;
+	int vies = 3;
+
+    int indexMaison = 1;
+
+    // boolean nouvelleMaisonCreee = false;
 
 	public FenetreDrunk(){
+        temps = 0;
 
 		if(MenuJeu.sound){
 
@@ -110,7 +117,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste.add(Guy);
 		
 		
-		/*Creation des polygones*/
+		//Creation des polygones
 		Point A = new Point(200,0);
 		Point B = new Point(300,0);
 		Point C = new Point(400,600);
@@ -161,45 +168,19 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste.add(Poly3);
 		Liste.add(Poly4);
 
-		//Des maisons
-		for(int i = 0; i< 100 ; i++){
-			double positionLaterale = 10000*Math.random();
-			A = new Point(positionLaterale-500,0);
-			B = new Point(positionLaterale+500,0);
-			C = new Point(positionLaterale+500,1500);
-			D = new Point(positionLaterale,2000);
-			E = new Point(positionLaterale-500,1500);
-			Point[] tabloCo = {A,B,C,D,E};
-			Obstacle Maison = new Obstacle(tabloCo, i*25 , 0);
-			//Maison.angularSpeed = 10*Math.sin(0.01*i); //vitesse angulaire random, juste pour le fun
-			Liste.add(Maison);
+		//Des maisons à gauche et à droite
+		for(int i = 0; i< 20 ; i++){
+			newMaison(Liste, i*50, true);
+			newMaison(Liste, i*50 , false);
 		}
 
-		//Encore des maisons
-		for(int i = 0; i<100 ; i++){
-			double positionLaterale = -10000*Math.random();
-			A = new Point(positionLaterale-500,0);
-			B = new Point(positionLaterale+500,0);
-			C = new Point(positionLaterale+500,1500);
-			D = new Point(positionLaterale,2000);
-			E = new Point(positionLaterale-500,1500);
-			Point[] tabloCo = {A,B,C,D,E};
-			Objet Maison = new Obstacle(tabloCo, i*25 , 0);
-			Liste.add(Maison);
-		}
 
 		// voiture
-		double[] limvoiture = {-3000,3000, 0, 1000, 0,10000};
-		A = new Point(-3000,0);
-		B = new Point(-3000,500);
-		C = new Point(-2000,500);
-		D = new Point(-2000,0);
-		Point[] tabvoiture = {A,B,C,D};
-		Obstacle Voiture = new Obstacle(tabvoiture,300,0,limvoiture);
-		Voiture.vx = 5;
-		Voiture.vy = 20;
-		Voiture.angularSpeed = 5;
-		Liste.add(Voiture);
+		double[] limvoiture = {-5000,5000, 0, 1000, 0,10000};
+
+		for(int i = 0; i<50; i++){
+			newVoiture(Liste, i*30, limvoiture);
+		}
 
 
 
@@ -210,10 +191,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		addMouseMotionListener(this);
 		addKeyListener(this);
 
-
-
 		//Initialisation du timer
-		timer = new Timer(30,this);
+		timer = new Timer(30,new TimerAction());
 		timer.start();
 
 	}
@@ -242,7 +221,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		B = Geo.perspectiveP(B);
 
 		buffer.setColor(Color.white);
-		buffer.drawLine((int) A.x,((int)A.y),(int) B.x,(int) B.y);
+		buffer.drawLine((int) A.x,(int)A.y,(int) B.x,(int) B.y);
 
 
 		//pour tous �a il faut comprendre comment j ai fait la perspective : un point sera dessine en projetant son x et
@@ -303,6 +282,16 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		}
 		buffer.drawString("Ca touche "+ PtInter.size() +" fois !", 20, 50);
 
+		//faut peut-être l'insérer dans la boucle, mais je veux gérer à part le cas où le Guy (Liste.get(0))
+		//cogne dans un truc, pr diminuer son nb de vies ou autre
+		for(int i=1; i<Liste.size(); i++){
+			if(Liste.get(0).Intersect(Liste.get(i))){
+				vies-=1;
+			}
+		}
+
+
+		score = (int)(temps*0.03);
 
 		for(int l = 0 ; l <= PtInter.size()-1 ; l++){
 			//Calcul de la position a l ecran des pt d'intersection pour ecrire "�a touche'
@@ -312,21 +301,106 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		}
 
 		// petits tests pour un HUD - on ajoutera du texte en fct de l'évolution du jeu :)
-		int score =(int)(temps*0.03);
 
 		Font police = new Font("Courier", Font.BOLD, 24); //mettez any font you like !
 		buffer.setFont(police);
 		buffer.setColor(Color.WHITE);
 		buffer.drawString("Score : " + score, 20, (int)HAUTEUR-20);
-		buffer.drawString("Vies : "+ 3, (int)LARGEUR-150, (int)HAUTEUR-20); // 3 vies, on verra comment on gère ça hein
+		buffer.drawString("Vies : "+ vies, (int)LARGEUR-150, (int)HAUTEUR-20); // 3 vies, on verra comment on gère ça hein
+
+        /*if(nouvelleMaisonCreee){
+            buffer.drawString("oui", (int)(LARGEUR*0.5), (int)HAUTEUR-20);
+        } else {
+            buffer.drawString("non", (int)(LARGEUR*0.5), (int)HAUTEUR-20);
+        }*/
 
 		g.drawImage(ArrierePlan,0,0,this);
 	}
 
+	public void newMaison(LinkedList liste, double z, boolean left){
+		double centreSol = 10000*Math.random();
+		if(left){centreSol*=-1;}
+		Point A, B, C, D, E;
+		A = new Point(centreSol-500,0);
+		B = new Point(centreSol+500,0);
+		C = new Point(centreSol+500,1500);
+		D = new Point(centreSol,2000);
+		E = new Point(centreSol-500,1500);
+		Point[] tabloCo = {A,B,C,D,E};
+		Obstacle Maison = new Obstacle(tabloCo, z , 0);
+		liste.add(Maison);
+	}
+
+	public void newVoiture(LinkedList liste, double z, double[] lim){
+		double centreLV = 10000*Math.random() - 10000*Math.random();
+		Point A, B, C, D;
+		A = new Point(centreLV-3000,100);
+		B = new Point(centreLV-3000,600);
+		C = new Point(centreLV-2000,600);
+		D = new Point(centreLV-2000,100);
+		Point[] tabvoiture = {A,B,C,D};
+		Obstacle Voiture = new Obstacle(tabvoiture,z,0,lim);
+		Voiture.vx = 16;
+		liste.add(Voiture);
+	}
+
+	private class TimerAction implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+
+			//Evolution de chaque objet
+			for(int i = 0; i<= Liste.size() -1 ; i++){
+				Liste.get(i).move();
+			}
+
+			//supprime les obstacles (derrière le bonhomme à -50) au fil du temps
+			for(int i = 1; i<= Liste.size() -1 ; i++){
+				if(Liste.get(i).z<Liste.get(0).z - 50){
+					Liste.remove(i);
+				}
+			}
+
+			// juste pour test un peu de deplacement elementaire
+			Liste.get(2).translate(Math.cos(temps*0.01), 0);
+			Liste.get(2).rotate(5*Math.cos(temps*0.01), Liste.get(0).points[2]);
+			Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);
+
+            //Creation de nouvelle maison
+            if(temps%70==0){
+                newMaison(Liste, 1000 + indexMaison * 50, true);
+				newMaison(Liste, 1000 + indexMaison * 50, false);
+                indexMaison++;
+            }
+
+			//Camera qui bouge
+
+			if (Geo.Obj.y +  0.1*(HAUTEUR*0.5 - soury) >=0){
+				if(admin){
+					Geo.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
+					Geo.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
+
+				}
+				else{
+					//on suit le Guy
+					Geo.Obj.z = Guy.z - 50;
+					Geo.zP = Geo.Obj.z - 60;
+
+					Geo.Obj.x = Guy.CenterOfMass().x;
+					Geo.Obj.y= Guy.CenterOfMass().y + 200;
+					// balancement
+					Geo.Obj.x += 10*Math.cos(temps*0.1);
+					Geo.Obj.y += -20*Math.sin(temps*0.2);
+				}
+			}
+			repaint();
+			temps++;
+		}
+
+	}
 
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
+
+	//@Override
+	/*public void actionPerformed(ActionEvent arg0) {
 
 		//Evolution de chaque objet
 		for(int i = 0; i<= Liste.size() -1 ; i++){
@@ -362,9 +436,9 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 
 		repaint();
-		temps ++;
+		temps++;
 
-	}
+	}*/
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
@@ -416,7 +490,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				} else {
 					Guy.vx-=2;
 				}
-				System.out.println(Guy.vx);
+				//System.out.println(Guy.vx);
 				break;
 			case KeyEvent.VK_RIGHT:
 				if(Guy.vx<-30){
@@ -424,7 +498,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				} else {
 					Guy.vx+=2;
 				}
-				System.out.println(Guy.vx);
+				//System.out.println(Guy.vx);
 				break;
 		}
 
@@ -457,6 +531,11 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				if(admin){admin = false;}
 				else {admin = true;}
 				break;
+            case 'n':
+                newMaison(Liste, indexMaison * 50, true);
+                indexMaison++;
+                break;
+
 		}
 	}
 
