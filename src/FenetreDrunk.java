@@ -509,8 +509,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				else {clip.start();}
 				break;
 			case 'a':
-				if(admin){admin = false;}
-				else {admin = true;}
+				admin = !admin;
 				break;
             case 'n':
                 newMaison(Liste, indexMaison * 50, true);

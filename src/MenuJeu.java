@@ -149,7 +149,7 @@ public class MenuJeu extends JFrame implements ActionListener{
 	
 		BufferedReader br = null;
 		String sCurrentLine = "Error while loading...";
-		File txt = new File("C:\\Users\\Alest\\git\\TheDrunkGuy\\src\\Highscore_memory.txt");
+		File txt = new File("Highscore_memory.txt");
 		String totaltext = "<html>";
 		int i = 0;
 		
@@ -167,8 +167,6 @@ public class MenuJeu extends JFrame implements ActionListener{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
 	}
 
 }
