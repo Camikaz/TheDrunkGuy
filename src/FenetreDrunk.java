@@ -216,7 +216,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 		//Le fond
 		if (background!=null) {
-			buffer.drawImage (background, 0, 0, this);
+			buffer.drawImage(background, 0, 0, getWidth(), getHeight(), this);
 		} else {
 			buffer.setColor(Color.BLUE);
 			buffer.fillRect(0, 0, this.getWidth(), this.getHeight());
@@ -244,7 +244,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
         int[] xPts = {(int)P1.x, (int)P2.x, (int)P3.x, (int)P4.x};
         int[] yPts = {(int)P1.y, (int)P2.y, (int)P3.y, (int)P4.y};
 
-        buffer.setColor(Color.GRAY);
+        buffer.setColor(Color.BLUE);
         buffer.fillPolygon(xPts, yPts, 4);
 
 		//pour tous �a il faut comprendre comment j ai fait la perspective : un point sera dessine en projetant son x et
