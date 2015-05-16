@@ -459,18 +459,18 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	public void keyPressed(KeyEvent arg0) {
 		switch(arg0.getKeyCode()){
 			case KeyEvent.VK_LEFT:
-				if(Guy.vx>30){
-					Guy.vx*=.5;
+				if(Guy.vx>=-15){
+					Guy.vx-=1.2;
 				} else {
-					Guy.vx-=2;
+					Guy.vx=-15;
 				}
 				//System.out.println(Guy.vx);
 				break;
 			case KeyEvent.VK_RIGHT:
-				if(Guy.vx<-30){
-					Guy.vx*=.5;
+				if(Guy.vx<=15){
+					Guy.vx+=1.2;
 				} else {
-					Guy.vx+=2;
+					Guy.vx=15;
 				}
 				//System.out.println(Guy.vx);
 				break;
