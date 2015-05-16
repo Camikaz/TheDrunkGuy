@@ -20,9 +20,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.JFrame;
-import javax.swing.Timer;
-
+import javax.swing.*;
 
 
 public class FenetreDrunk extends JFrame implements MouseListener,
@@ -42,7 +40,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	private double sourx = LARGEUR*0.5;
 	private double soury = HAUTEUR* 0.5;
 
-	//Hauteur et Largeur initiale de la fenetre (pour l'instant j'ai fait en sorte que �a soir resizable)
+	//Hauteur et Largeur initiale de la fenetre (pour l'instant j'ai fait en sorte que ça soit resizable)
 	public static double LARGEUR = 1024;
 	public static double HAUTEUR = 768;
 
@@ -77,8 +75,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 			mixer = AudioSystem.getMixer(mixInfos[0]); //ok you got it
 
-			DataLine.Info dataInfo = new DataLine.Info(Clip.class ,  null); // choisi un type de ligne (ici un clip)
-			try{ clip = (Clip) mixer.getLine(dataInfo);} // l'instance clip devient la ligne de mixer qui r�pond au crit�re DataLina.Info
+			DataLine.Info dataInfo = new DataLine.Info(Clip.class, null); // choisi un type de ligne (ici un clip)
+			try{clip = (Clip) mixer.getLine(dataInfo);} // l'instance clip devient la ligne de mixer qui r�pond au crit�re DataLina.Info
 			catch(LineUnavailableException lue) { lue.printStackTrace(); }
 
 			try {
@@ -86,6 +84,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundURL);
 				clip.open(audioStream);
 			}
+
 			catch(LineUnavailableException lue) { lue.printStackTrace(); }
 			catch(UnsupportedAudioFileException uafe)  {uafe.printStackTrace(); }
 			catch(IOException ioe) { ioe.printStackTrace();}
@@ -111,7 +110,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		//Initialisation de la fenetre
 		setSize((int) LARGEUR + this.getInsets().left + this.getInsets().right, (int) HAUTEUR + this.getInsets().top + this.getInsets().bottom);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setVisible(true);
 		setTitle("Drunk Guy");
 
@@ -215,7 +214,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		LARGEUR = this.getWidth();
 		HAUTEUR = this.getHeight();
 
-
 		//Le fond
 		if (background!=null) {
 			buffer.drawImage (background, 0, 0, this);
@@ -249,7 +247,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
         buffer.setColor(Color.GRAY);
         buffer.fillPolygon(xPts, yPts, 4);
 
-
 		//pour tous �a il faut comprendre comment j ai fait la perspective : un point sera dessine en projetant son x et
 		// son y sur un plan en passant par l objectif, on s y perd je l avoue mais j ai le truc en tete
 		for(int i = -100; i <= 100; i++){ //Lignes de fuites
@@ -280,13 +277,13 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		}
 
 		//Dessin des polygones
-		int[] ordre = new int[Liste.size()];
-		ordre = Objet.tri(Liste); //voir methode tri dans Objet
+		int[] ordre = Objet.tri(Liste); //voir methode tri dans Objet
 		for(int i = 0; i<= Liste.size() -1 ; i++){ //On parcourt la liste de polygones et les dessine
 			Liste.get(ordre[i]).draw(buffer);
 		}
 
 		//Petit test d'intersection
+        // TODO se concentrer que sur les interactions Bonhomme/Objet, qd on aura tous les Membres
 		buffer.setColor(Color.BLACK);
 		LinkedList<Point> PtInter = new LinkedList<Point>(); //Liste qui recupere les points d'intersection
 		LinkedList<Objet> ZInter = new LinkedList<Objet>(); //liste qui recupere les objet associes a ces intersection (oui c est un peu con mais j ai rien trouve de mieux pour avoir le z de l intersection !)
@@ -316,7 +313,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			}
 		}
 
-
 		score = (int)(temps*0.03);
 
 		for(int l = 0 ; l <= PtInter.size()-1 ; l++){
@@ -334,16 +330,10 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		buffer.drawString("Score : " + score, 20, (int)HAUTEUR-20);
 		buffer.drawString("Vies : "+ vies, (int)LARGEUR-150, (int)HAUTEUR-20); // 3 vies, on verra comment on gère ça hein
 
-        /*if(nouvelleMaisonCreee){
-            buffer.drawString("oui", (int)(LARGEUR*0.5), (int)HAUTEUR-20);
-        } else {
-            buffer.drawString("non", (int)(LARGEUR*0.5), (int)HAUTEUR-20);
-        }*/
-
 		g.drawImage(ArrierePlan,0,0,this);
 	}
 
-	public void newMaison(LinkedList liste, double z, boolean left){
+	public void newMaison(LinkedList<Objet> liste, double z, boolean left){
 		double centreSol = 10000*Math.random();
 		if(left){centreSol*=-1;}
 		Point A, B, C, D, E;
@@ -357,7 +347,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		liste.add(Maison);
 	}
 
-	public void newVoiture(LinkedList liste, double z, double[] lim){
+	public void newVoiture(LinkedList<Objet> liste, double z, double[] lim){
 		double centreLV = 10000*Math.random() - 10000*Math.random();
 		Point A, B, C, D;
 		A = new Point(centreLV-3000,100);
@@ -378,9 +368,9 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				Liste.get(i).move();
 			}
 
-			//supprime les obstacles (derrière le bonhomme à -50) au fil du temps
+			//supprime les obstacles (derrière le bonhomme à -10) au fil du temps
 			for(int i = 1; i<= Liste.size() -1 ; i++){
-				if(Liste.get(i).z<Liste.get(0).z - 50){
+				if(Liste.get(i).z<Liste.get(0).z - 10){
 					Liste.remove(i);
 				}
 			}
@@ -515,7 +505,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
                 newMaison(Liste, indexMaison * 50, true);
                 indexMaison++;
                 break;
-
 		}
 	}
 
