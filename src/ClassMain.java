@@ -7,5 +7,4 @@ public class ClassMain {
 		new MenuJeu();
 	}
 
-
 }

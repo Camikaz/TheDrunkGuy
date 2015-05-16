@@ -113,11 +113,11 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Point dg3 = new Point(150,700);
 		Point dg4 = new Point(150,0);
 		Point[] tabGuy = {dg1, dg2, dg3, dg4};
-		Guy = new Obstacle(tabGuy, 10, 1);
+		Guy = new Obstacle(tabGuy, 10, .5);
 		Liste.add(Guy);
-		
-		
-		//Creation des polygones
+
+
+		/*//Creation des polygones
 		Point A = new Point(200,0);
 		Point B = new Point(300,0);
 		Point C = new Point(400,600);
@@ -166,7 +166,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		Liste.add(Poly11);
 		Liste.add(Poly2);
 		Liste.add(Poly3);
-		Liste.add(Poly4);
+		Liste.add(Poly4);*/
 
 		//Des maisons à gauche et à droite
 		for(int i = 0; i< 20 ; i++){
@@ -359,16 +359,17 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				}
 			}
 
-			// juste pour test un peu de deplacement elementaire
+			/*// juste pour test un peu de deplacement elementaire
 			Liste.get(2).translate(Math.cos(temps*0.01), 0);
 			Liste.get(2).rotate(5*Math.cos(temps*0.01), Liste.get(0).points[2]);
-			Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);
+			Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);*/
 
             //Creation de nouvelle maison
-            if(temps%70==0){
+            if(temps%50==0){
                 newMaison(Liste, 1000 + indexMaison * 50, true);
 				newMaison(Liste, 1000 + indexMaison * 50, false);
                 indexMaison++;
+				System.out.println(Liste.size());
             }
 
 			//Camera qui bouge
@@ -381,11 +382,11 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				}
 				else{
 					//on suit le Guy
-					Geo.Obj.z = Guy.z - 50;
+					Geo.Obj.z = Guy.z - 100;
 					Geo.zP = Geo.Obj.z - 60;
 
 					Geo.Obj.x = Guy.CenterOfMass().x;
-					Geo.Obj.y= Guy.CenterOfMass().y + 200;
+					Geo.Obj.y= Guy.CenterOfMass().y + 250;
 					// balancement
 					Geo.Obj.x += 10*Math.cos(temps*0.1);
 					Geo.Obj.y += -20*Math.sin(temps*0.2);
