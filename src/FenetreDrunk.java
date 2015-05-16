@@ -7,10 +7,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -24,8 +26,8 @@ import javax.swing.Timer;
 
 
 public class FenetreDrunk extends JFrame implements MouseListener,
-		MouseMotionListener,/* ActionListener,*/ KeyListener {
-
+		MouseMotionListener, KeyListener {
+	Image background;
 	private Timer timer;
 	private LinkedList<Objet> Liste; //La Liste de tout les objets a afficher
 
@@ -41,8 +43,8 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 	private double soury = HAUTEUR* 0.5;
 
 	//Hauteur et Largeur initiale de la fenetre (pour l'instant j'ai fait en sorte que �a soir resizable)
-	public static double LARGEUR = 1000;
-	public static double HAUTEUR = 700;
+	public static double LARGEUR = 1024;
+	public static double HAUTEUR = 768;
 
 	//2 objets utiles pour la musique
 	public static Mixer mixer;
@@ -58,6 +60,15 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 
 	public FenetreDrunk(){
         temps = 0;
+
+		//image de fond
+		background=null;
+		try {
+			background = ImageIO.read(new File("Stars.jpg"));
+		}
+		catch (IOException e){
+			System.out.println ("Could not load image file.");
+		}
 
 		if(MenuJeu.sound){
 
@@ -98,7 +109,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		}
 
 		//Initialisation de la fenetre
-		setSize((int)LARGEUR+this.getInsets().left + this.getInsets().right,(int)HAUTEUR+this.getInsets().top + this.getInsets().bottom);
+		setSize((int) LARGEUR + this.getInsets().left + this.getInsets().right, (int) HAUTEUR + this.getInsets().top + this.getInsets().bottom);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
@@ -179,7 +190,7 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		double[] limvoiture = {-5000,5000, 0, 1000, 0,10000};
 
 		for(int i = 0; i<50; i++){
-			newVoiture(Liste, i*30, limvoiture);
+			newVoiture(Liste, i * 30, limvoiture);
 		}
 
 
@@ -206,12 +217,17 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		LARGEUR = this.getWidth();
 		HAUTEUR = this.getHeight();
 
-		// affichage des lignes du sol
 
 		//Le fond
-		buffer.setColor(Color.PINK);
-		buffer.fillRect(0, 0, this.getWidth(), this.getHeight());
+		if (background!=null) {
+			buffer.drawImage (background, 0, 0, this);
+		} else {
+			buffer.setColor(Color.BLUE);
+			buffer.fillRect(0, 0, this.getWidth(), this.getHeight());
+		}
 
+
+		// affichage des lignes du sol
 		//ces variables vont nous servir pour toutes les lignes
 		Point A,B;
 		//Dessin de l'horizon
@@ -397,49 +413,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		}
 
 	}
-
-
-
-	//@Override
-	/*public void actionPerformed(ActionEvent arg0) {
-
-		//Evolution de chaque objet
-		for(int i = 0; i<= Liste.size() -1 ; i++){
-			Liste.get(i).move();
-		}
-
-		// juste pour test un peu de deplacement elementaire
-		Liste.get(2).translate(Math.cos(temps*0.01), 0);
-		Liste.get(2).rotate(5*Math.cos(temps*0.01), Liste.get(0).points[2]);
-		Liste.get(1).rotate(temps*0.01, Liste.get(1).points[3]);
-
-
-		//Camera qui bouge
-
-		if (Geo.Obj.y +  0.1*(HAUTEUR*0.5 - soury) >=0){
-			if(admin){
-				Geo.Obj.x += -0.1*(LARGEUR*0.5 - sourx);
-				Geo.Obj.y += 0.1*(HAUTEUR*0.5 - soury);
-
-			}
-			else{
-				//on suit le Guy
-				Geo.Obj.z = Guy.z - 50;
-				Geo.zP = Geo.Obj.z - 60;
-
-				Geo.Obj.x = Guy.CenterOfMass().x;
-				Geo.Obj.y= Guy.CenterOfMass().y + 200;
-				// balancement
-				Geo.Obj.x += 10*Math.cos(temps*0.1);
-				Geo.Obj.y += -20*Math.sin(temps*0.2);
-			}
-		}
-
-
-		repaint();
-		temps++;
-
-	}*/
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
