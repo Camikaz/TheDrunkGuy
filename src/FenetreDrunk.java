@@ -237,6 +237,18 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 		buffer.setColor(Color.white);
 		buffer.drawLine((int) A.x,(int)A.y,(int) B.x,(int) B.y);
 
+        //remplir le sol de noir - artisanal
+        Point P1,P2,P3,P4;
+        P1 = Geo.perspectiveP(new Point(-10000,0),10000);//en bas
+        P2 = Geo.perspectiveP(new Point(10000,0),10000);
+        P4 = Geo.perspectiveP(new Point(-10000,0),(int) (Geo.Obj.z+2));//en haut
+        P3 = Geo.perspectiveP(new Point(10000,0),(int) (Geo.Obj.z+2));
+        int[] xPts = {(int)P1.x, (int)P2.x, (int)P3.x, (int)P4.x};
+        int[] yPts = {(int)P1.y, (int)P2.y, (int)P3.y, (int)P4.y};
+
+        buffer.setColor(Color.GRAY);
+        buffer.fillPolygon(xPts, yPts, 4);
+
 
 		//pour tous �a il faut comprendre comment j ai fait la perspective : un point sera dessine en projetant son x et
 		// son y sur un plan en passant par l objectif, on s y perd je l avoue mais j ai le truc en tete
