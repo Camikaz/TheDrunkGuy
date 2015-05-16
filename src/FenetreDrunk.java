@@ -193,8 +193,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 			newVoiture(Liste, i * 30, limvoiture);
 		}
 
-
-
 		//fin de la creation des objets
 
 		//On ajoute des Listener en toute sorte
@@ -385,7 +383,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
                 newMaison(Liste, 1000 + indexMaison * 50, true);
 				newMaison(Liste, 1000 + indexMaison * 50, false);
                 indexMaison++;
-				System.out.println(Liste.size());
             }
 
 			//Camera qui bouge
@@ -464,7 +461,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				} else {
 					Guy.vx=-15;
 				}
-				//System.out.println(Guy.vx);
 				break;
 			case KeyEvent.VK_RIGHT:
 				if(Guy.vx<=15){
@@ -472,7 +468,6 @@ public class FenetreDrunk extends JFrame implements MouseListener,
 				} else {
 					Guy.vx=15;
 				}
-				//System.out.println(Guy.vx);
 				break;
 		}
 
