@@ -1,3 +1,4 @@
+package drunky;
 
 public abstract class EulerMath {
 	//----------Decleration of times variables--------------//

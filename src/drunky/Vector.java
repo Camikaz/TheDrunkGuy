@@ -1,3 +1,4 @@
+package drunky;
 public class Vector {
 	// points are used to define a bound vector, coordinates for a free vector
 	Point a, b;

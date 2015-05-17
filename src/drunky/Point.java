@@ -1,3 +1,4 @@
+package drunky;
 
 public class Point {
 	
