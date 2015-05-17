@@ -42,10 +42,9 @@ public class MenuJeu extends JFrame implements ActionListener{
 		
 		label = new JLabel("The Drunken Mile");
 		label.setFont(new Font("BlackBoard", Font.BOLD, 60));
-		play = new bouton("PLAY");
+		play = new JButton("PLAY");
 		play.addActionListener(this);
 		play.setOpaque(false);
-		play.repaint();
 		
 		JPanel title = new JPanel(); //titre
 		title.add(label);
